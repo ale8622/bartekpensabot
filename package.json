@@ -1,0 +1,20 @@
+{
+  "name": "bartekpensabot",
+  "version": "1.0.0",
+  "description": "Cosa pensa Bartek oggi?",
+  "main": "index.js",
+  "repository": "https://github.com/ale8622/bartekpensabot",
+  "author": "ale8622",
+  "license": "None",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "jest": "^28.1.0",
+    "node-emoji": "^1.11.0",
+    "node-telegram-bot-api": "^0.57.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest"
+  }
+}
