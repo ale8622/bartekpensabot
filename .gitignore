@@ -1,5 +1,10 @@
 .env
 .git
 .lock
+<<<<<<< HEAD
 node_modules
 
+=======
+docker-compose.yml
+node_modules
+>>>>>>> 38c033c7282bbb4e6da02ed457c62397c6c3b9ec
