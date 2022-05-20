@@ -37,7 +37,7 @@ bot.onText(/Domandati/, async (msg) => {
          done = done+1;
     }
     else{
-        const questions = await redisClient.getQuestions(msg.chat.id,"questions");
+        const questions = await redisClient.getJson(msg.chat.id,"questions");
         const quest = questions.domandone[Math.floor(Math.random() * questions.domandone.length)]
         bot.sendMessage(msg.chat.id,quest);
     }
