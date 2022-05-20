@@ -1,4 +1,5 @@
 .env
 .git
-
+.lock
+docker-compose.yml
 node_modules
