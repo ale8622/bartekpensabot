@@ -1,8 +1,9 @@
 require("./app")
-const redisClient = require("./redisClient")
+//const redisClient = require("./redisClient")
 const { Constants } = require("./constants");
 const friday = require('./friday.json'); 
 const questionsRedisKey = "questions";
+const questions = require('./questions.json');
 
 
 const TelegramBot =require('node-telegram-bot-api')
@@ -37,7 +38,7 @@ bot.onText(/Domandati/, async (msg) => {
          done = done+1;
     }
     else{
-        const questions = await redisClient.getJson(msg.chat.id,"questions");
+        //const questions = await redisClient.getJson(msg.chat.id,"questions");
         const quest = questions.domandone[Math.floor(Math.random() * questions.domandone.length)]
         bot.sendMessage(msg.chat.id,quest);
     }
