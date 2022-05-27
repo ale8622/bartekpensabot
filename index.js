@@ -32,13 +32,15 @@ bot.onText(/init/, async (msg) => {
 
 bot.onText(/mangiamo/, async (msg) => {
 
+    console.log("A "  + perPranzo);
     if( GiornoCambiato()) console.log("cambiato Giorno");
-
-    if(perPranzo = 0) {
+    console.log("B "  + perPranzo);
+    if(perPranzo <= 0) {
         const quest = rispondi(questions.pranzo);
         bot.sendMessage(msg.chat.id,quest);
         perPranzo++;
     } else {
+        console.log(perPranzo);
         bot.sendMessage(msg.chat.id,"per Oggi ho già risposto");
     }
 });
@@ -66,8 +68,9 @@ function rispondi(lista){
 
     var isFriday = (new Date().getDay() === 5) ; 
 
-    if(isFriday && done < friday.esclamazioni.length) {     
-         return friday.esclamazioni[done++] 
+    if(isFriday && done < friday.esclamazioni.length) {  
+        perPranzo = -1;   
+        return friday.esclamazioni[done++] 
    }
    else{
        return lista[Math.floor(Math.random() * lista.length)]
