@@ -17,9 +17,13 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     bot.sendMessage(msg.chat.id, Constants.WelcomeMessage, {
         reply_markup : {
             keyboard : [[Constants.Question]],
-            force_reply : false
+            force_reply : true
         }
     })
+});
+
+bot.onText(/init/, async (msg) => {
+    done = 0;
 });
 
 bot.onText(/Domandati/, async (msg) => {
