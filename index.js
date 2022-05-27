@@ -24,7 +24,7 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
 
 bot.onText(/init/, async (msg) => {
     done = 0;
-    Console.console.log("init");
+    console.log("init");
 });
 
 
