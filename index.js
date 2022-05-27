@@ -37,6 +37,7 @@ bot.onText(/ics/, async (msg) => {
     bot.sendMessage(msg.chat.id,quest);
 });
 bot.onText(/Domandati/, async (msg) => {
+    const quest = rispondi(questions.domandone);
     bot.sendMessage(msg.chat.id,quest);
 });
 
