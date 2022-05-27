@@ -3,14 +3,22 @@
         "SDP o FDP?",
         "Opzionabile?",
         "FootballDataPlatform o BundesligaDataPlatform?",
-        "Saas o Paas?",
         "Jay ma che fay?",
-	"Jay ma ci sei?",
+	    "Jay ma ci sei?",
+        "Materializer DS, WTF?",   
+        "Ma perchè 4 topic?",
+        "Ma SDP è adatta o non è adatta a fare le Olipiadi?",
+        "Ready to Production?",
+        "Tutto ok? ditelo addesso o mai più!",
+        "Ti puoi scrivere il task?",
+        "Saas o Paas?",
+        "Q3 o Q4? magari Q5? ",
         "SDP o Salerno Reggio Calabria?",
-        "Materializer DS, WTF?",
         "POC o Project Mode?",
         "Strapi o Competition Hub?",
-        "Ma perchè 4 topic?"
+        "Kaa o Confluent?",
+        "Ma se togliamo Zookeeper, quanta RAM liberiamo?",
+        "Classe Generica o Classe Specifiga?"
     ]
 }
                         
