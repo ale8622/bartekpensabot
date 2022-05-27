@@ -13,7 +13,7 @@ var today_global = new Date();
 var dayOfWeek_global  = today_global.getDay();
 
 bot.onText(/^[\/]{1}Start/, async (msg) => {
-    await redisClient.setJson(msg.chat.id,questionsRedisKey,"{}");
+    //await redisClient.setJson(msg.chat.id,questionsRedisKey,"{}");
     bot.sendMessage(msg.chat.id, Constants.WelcomeMessage, {
         reply_markup : {
             keyboard : [[Constants.Question]],
