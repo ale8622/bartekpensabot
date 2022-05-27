@@ -19,6 +19,28 @@
         "Kaa o Confluent?",
         "Ma se togliamo Zookeeper, quanta RAM liberiamo?",
         "Classe Generica o Classe Specifiga?"
+    ],
+    "pranzo": [
+        "Baretto",
+        "Roselli",
+        "Empanadas",
+        "Portafoglio",
+        "Enzo",
+        "Mobercelli",
+        "Vegano",
+        "Panuozzo",
+        "Kebab"
+    ],
+    "ics": [
+        "Osakax",
+        "Peruglio",
+        "Agostu",
+        "CaXaPonte",
+        "Maccaronix",
+        "Tettembre",
+        "Remox",
+        "ControCorrente",
+        "Personigga"
     ]
 }
                         

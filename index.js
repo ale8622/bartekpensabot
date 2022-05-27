@@ -16,7 +16,7 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     //await redisClient.setJson(msg.chat.id,questionsRedisKey,"{}");
     bot.sendMessage(msg.chat.id, Constants.WelcomeMessage, {
         reply_markup : {
-            keyboard : [[Constants.Question]],
+            keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics]],
             force_reply : true
         }
     })
@@ -24,25 +24,33 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
 
 bot.onText(/init/, async (msg) => {
     done = 0;
+    Console.console.log("init");
 });
 
+
+bot.onText(/mangiamo/, async (msg) => {
+    const quest = rispondi(questions.pranzo);
+    bot.sendMessage(msg.chat.id,quest);
+});
+bot.onText(/ics/, async (msg) => {
+    const quest = rispondi(questions.ics);
+    bot.sendMessage(msg.chat.id,quest);
+});
 bot.onText(/Domandati/, async (msg) => {
+    bot.sendMessage(msg.chat.id,quest);
+});
+
+function rispondi(lista){
+    
     var today = new Date();
     var dayOfWeek = today.getDay();
-    
     if(dayOfWeek_global != dayOfWeek) done = 0;
-    
+    var isFriday = (dayOfWeek === 5) ; 
 
-    var isFriday = (dayOfWeek === 5) ; // 6 = Saturday, 0 = Sunday
-
-    if(isFriday && done < friday.esclamazioni.length) {        
-         bot.sendMessage(msg.chat.id, friday.esclamazioni[done] );
-         done = done+1;
-    }
-    else{
-        //const questions = await redisClient.getJson(msg.chat.id,"questions");
-        const quest = questions.domandone[Math.floor(Math.random() * questions.domandone.length)]
-        bot.sendMessage(msg.chat.id,quest);
-    }
-    
-});
+    if(isFriday && done < friday.esclamazioni.length) {     
+         return friday.esclamazioni[done++] 
+   }
+   else{
+       return lista[Math.floor(Math.random() * lista.length)]
+   }
+}
