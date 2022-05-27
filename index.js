@@ -19,8 +19,6 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
             keyboard : [[Constants.Question]],
             force_reply : false
         }
-    }).then(() => {
-        bot.clearReplyListeners()
     })
 });
 
