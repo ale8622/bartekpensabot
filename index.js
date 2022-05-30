@@ -32,15 +32,12 @@ bot.onText(/init/, async (msg) => {
 
 bot.onText(/mangiamo/, async (msg) => {
 
-    console.log("A "  + perPranzo);
     if( GiornoCambiato()) console.log("cambiato Giorno");
-    console.log("B "  + perPranzo);
     if(perPranzo <= 0) {
         const quest = rispondi(questions.pranzo);
         bot.sendMessage(msg.chat.id,quest);
         perPranzo++;
     } else {
-        console.log(perPranzo);
         bot.sendMessage(msg.chat.id,"per Oggi ho già risposto");
     }
 });
