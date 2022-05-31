@@ -5,7 +5,6 @@ const friday = require('./friday.json');
 const questionsRedisKey = "questions";
 const questions_bck = require('./questions.json');
 
-
 const TelegramBot =require('node-telegram-bot-api')
 const bot = new TelegramBot(process.env.BOT_API_KEY, {polling:true});
 var done = 0;
@@ -13,13 +12,17 @@ var perPranzo = 0;
 var today_global = new Date();
 var dayOfWeek_global  = today_global.getDay();
 
+async function readQuestions(msg) {
+    return await redisClient.getJson(msg.chat.id,questionsRedisKey);
+ } 
+
 bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log("Start");
-    var questions = await redisClient.getJson(msg.chat.id,questionsRedisKey);
+    var questions = await readQuestions(msg);
     if(!questions) {
         console.log("Init redis values");
-        questions = questions_bck;
-       await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
+       await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
+       questions = questions_bck;
     }
     bot.sendMessage(msg.chat.id, Constants.WelcomeMessage, {
         reply_markup : {
@@ -30,6 +33,9 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
 
 });
 
+
+
+
 bot.onText(/init/, async (msg) => {
     done = 0;
     perPranzo = 0;
@@ -38,7 +44,7 @@ bot.onText(/init/, async (msg) => {
 
 
 bot.onText(/mangiamo/, async (msg) => {
-
+    var questions = await readQuestions(msg);
     if( GiornoCambiato()) console.log("cambiato Giorno");
     if(perPranzo <= 0) {
         const quest = rispondi(questions.pranzo);
@@ -49,10 +55,12 @@ bot.onText(/mangiamo/, async (msg) => {
     }
 });
 bot.onText(/ics/, async (msg) => {
+    var questions = await readQuestions(msg);
     const quest = rispondi(questions.ics);
     bot.sendMessage(msg.chat.id,quest);
 });
 bot.onText(/Domandati/, async (msg) => {
+    var questions = await readQuestions(msg);
     const quest = rispondi(questions.domandone);
     bot.sendMessage(msg.chat.id,quest);
 });
