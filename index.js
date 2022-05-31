@@ -16,12 +16,30 @@ async function readQuestions(msg) {
     return await redisClient.getJson(msg.chat.id,questionsRedisKey);
  } 
 
+ async function readMessageForUser(msg) {
+    return await redisClient.getInt(msg.chat.id, msg.from.username);
+ } 
+
+ async function setMessageForUser(msg) {
+    var num = await readMessageForUser(msg) ?? 0;
+    await redisClient.setInt(msg.chat.id, msg.from.username, num + 1);
+    return num + 1;
+ } 
+ 
+// bot.on("message", async (msg) => {
+//     var n = await setMessageForUser(msg);
+//         if (n> 4)  {
+//             console.log(msg.from.username + "! Clicca di meno merda!");
+//         }
+//     }
+// );
+
 bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log("Start from " + msg.from.username);
-
+    
     var questions = await readQuestions(msg);
     if(!questions) {
-        console.log("Init redis values");
+       console.log("Init redis values");
        await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
        questions = questions_bck;
     }
@@ -46,6 +64,7 @@ bot.onText(/init/, async (msg) => {
 
 bot.onText(/mangiamo/, async (msg) => {
     var questions = await readQuestions(msg);
+    await setMessageForUser(msg);
     if( GiornoCambiato()) console.log("cambiato Giorno");
     if(perPranzo <= 0) {
         const quest = rispondi(questions.pranzo);
@@ -56,11 +75,13 @@ bot.onText(/mangiamo/, async (msg) => {
     }
 });
 bot.onText(/ics/, async (msg) => {
+    await setMessageForUser(msg);
     var questions = await readQuestions(msg);
     const quest = rispondi(questions.ics);
     bot.sendMessage(msg.chat.id,quest);
 });
 bot.onText(/Domandati/, async (msg) => {
+    await setMessageForUser(msg);
     var questions = await readQuestions(msg);
     const quest = rispondi(questions.domandone);
     bot.sendMessage(msg.chat.id,quest);
