@@ -1,9 +1,9 @@
 require("./app")
-//const redisClient = require("./redisClient")
+const redisClient = require("./redisClient")
 const { Constants } = require("./constants");
 const friday = require('./friday.json'); 
 const questionsRedisKey = "questions";
-const questions = require('./questions.json');
+const questions_bck = require('./questions.json');
 
 
 const TelegramBot =require('node-telegram-bot-api')
@@ -14,19 +14,26 @@ var today_global = new Date();
 var dayOfWeek_global  = today_global.getDay();
 
 bot.onText(/^[\/]{1}Start/, async (msg) => {
-    //await redisClient.setJson(msg.chat.id,questionsRedisKey,"{}");
+    console.log("Start");
+    var questions = await redisClient.getJson(msg.chat.id,questionsRedisKey);
+    if(!questions) {
+        console.log("Init redis values");
+        questions = questions_bck;
+       await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
+    }
     bot.sendMessage(msg.chat.id, Constants.WelcomeMessage, {
         reply_markup : {
             keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics]],
             force_reply : true
         }
     })
+
 });
 
 bot.onText(/init/, async (msg) => {
     done = 0;
     perPranzo = 0;
-    console.log("init");
+    console.log("Init");
 });
 
 
