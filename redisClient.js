@@ -2,12 +2,16 @@ const { createClient } = require('redis');
 const redisClient = createClient({url: process.env.REDIS_URL});
 
 module.exports = {
-   getJson: async function(chatId, redisKey)
+   getJson: async function(chatId, redisKey, questions_bck)
    {
+      try{
         await redisClient.connect();
         const value = await redisClient.get(redisKey+chatId);
         await redisClient.quit()
-        return JSON.parse(value);
+        return !value? questions_bck:  JSON.parse(value);
+      } catch{
+         return  questions_bck;
+      }
    },
 
    setJson: async function(chatId, redisKey, jsonValue)

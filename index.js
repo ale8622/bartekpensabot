@@ -81,7 +81,7 @@ bot.onText(/ics/, async (msg) => {
     bot.sendMessage(msg.chat.id,quest);
 });
 bot.onText(/Domandati/, async (msg) => {
-    await setMessageForUser(msg);
+    
     var questions = await readQuestions(msg);
     const quest = rispondi(questions.domandone);
     bot.sendMessage(msg.chat.id,quest);
