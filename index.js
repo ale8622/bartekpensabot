@@ -17,7 +17,8 @@ async function readQuestions(msg) {
  } 
 
 bot.onText(/^[\/]{1}Start/, async (msg) => {
-    console.log("Start");
+    console.log("Start from " + msg.from.username);
+
     var questions = await readQuestions(msg);
     if(!questions) {
         console.log("Init redis values");
@@ -39,7 +40,7 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
 bot.onText(/init/, async (msg) => {
     done = 0;
     perPranzo = 0;
-    console.log("Init");
+    console.log("Init from " + msg.from.username);
 });
 
 
@@ -51,7 +52,7 @@ bot.onText(/mangiamo/, async (msg) => {
         bot.sendMessage(msg.chat.id,quest);
         perPranzo++;
     } else {
-        bot.sendMessage(msg.chat.id,"per Oggi ho già risposto");
+        bot.sendMessage(msg.chat.id, msg.from.first_name + ", per Oggi ho già risposto");
     }
 });
 bot.onText(/ics/, async (msg) => {
