@@ -2,11 +2,9 @@ const emoji = require("node-emoji");
 
 module.exports.Constants = {
  WelcomeMessage : "Cosa si starà chiedendo Bartek oggi?",
- Question : emoji.get('question')+"Domandati"+emoji.get('question'),
- Lunch :emoji.get('spaghetti') +" mangiamo"+emoji.get('question'),
+ Question : emoji.get('question')+" Domandati"+emoji.get('question'),
+ Lunch :emoji.get('spaghetti') +" Mangiamo"+emoji.get('question'),
  Ics : emoji.get('x')+" ics",
- QuestionAdd : emoji.get('question')+"AddDomandati"+emoji.get('question'),
- LunchAdd :emoji.get('spaghetti') +" AddMangiamo"+emoji.get('question'),
- IcsAdd : emoji.get('x')+" Addics",
+ Rigat : emoji.get('x')+" R.Dicecose",
  FaiCose: emoji.get('x')+" sistema"
 }
