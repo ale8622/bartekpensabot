@@ -7,9 +7,10 @@ module.exports = {
       try{
         await redisClient.connect();
         const value = await redisClient.get(redisKey+chatId);
-        await redisClient.quit()
+        await redisClient.quit();
         return !value? questions_bck:  JSON.parse(value);
-      } catch{
+      } catch(ex) {
+         await redisClient.quit();
          return  questions_bck;
       }
    },
