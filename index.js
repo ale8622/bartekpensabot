@@ -165,11 +165,11 @@ bot.onText(/sistema/, async (msg) => {
     
 });
 
- bot.onText(/R.Dicecose/, async (msg) => {
+ bot.onText(/RDicecose/, async (msg) => {
    
     if(questions && questions.Rigat) {
         var quest = rispondi(questions.Rigat);
-        bot.sendMessage("R. dice: " +  msg.chat.id,quest);
+        bot.sendMessage( msg.chat.id, "R. dice: " +  quest);
     } else {
         bot.sendMessage(msg.chat.id, whats);
     }
