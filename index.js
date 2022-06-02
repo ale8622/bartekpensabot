@@ -35,7 +35,7 @@ async function readQuestions(msg) {
         return await redisClient.getJson(msg.chat.id,questionsRedisKey);
     } 
     catch (ex){
-        console.log("non rieco a leggere da redis");
+        console.log("non riesco a leggere da redis");
         console.log(ex);
         return null;
     }
@@ -63,9 +63,17 @@ async function readQuestions(msg) {
 //     }
 // );
 
-bot.onText(/^[\/]{1}Start/, async (msg) => {
+
+function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+  }
+  
+
+//
+  bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log("Start from " + msg.from.username);
 
+    delay(500).then(() => console.log('ran after time second1 passed'));
     bot.sendMessage(msg.chat.id, Constants.WelcomeMessage, {
         reply_markup : {
             keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.Rigat],],
@@ -77,6 +85,8 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log("Read redis values");
     if(!questions) {
        console.log("Init redis values");
+       
+       delay(500).then(() => console.log('ran after .1 second1 passed'));
        await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
        questions = questions_bck;
        console.log("Init redis values - ended");
@@ -116,26 +126,82 @@ id_message_start = msg.message_id;
 
   });
 
+//
 
-  bot.onText(/addmangiare/, async (msg) => { 
-    console.log("addmangiare");
-    var newone = msg.text.toLowerCase().replace("addmangiare", "").trim();
-    var check = questions.pranzo.filter(x=> x.includes(newone) || newone.includes(x)) ;
-    if(check.length == 0){
-        questions.pranzo.push(newone);
-        await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
-        await redisClient.getJson(msg.chat.id,questionsRedisKey);
-        console.log("aggiunto " + newone);
-    } else {
-        bot.sendMessage(msg.chat.id, "esiste già " + newone);
-        console.log("esiste già " +newone);
-        bot.mess
+async function  aggiugiSuRedis(mode, msg, arrayname){
+    console.log(mode);
+    if (questions && questions != ''){
+        var newone = msg.text.replace(mode, "").trim();
+        var check = questions[arrayname].filter(x=> x.includes(newone) || newone.includes(x)) ;  
+        if(check.length == 0){
+            questions[arrayname].push(newone);
+            await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
+            delay(100).then(() => console.log('ran after .1 second1 passed'));
+            await redisClient.getJson(msg.chat.id,questionsRedisKey);
+            console.log("aggiunto " + newone);
+        } else {
+            bot.sendMessage(msg.chat.id, "esiste già " +newone);
+            console.log("esiste già " +newone);
+        }
     }
-  });
+    else {
+        bot.sendMessage(msg.chat.id, "Problemi com " + mode);
+        console.log("Problemi com " + mode);
+   
+    }
+  }
 
-  bot.onText(/addbartek/, async (msg) => { 
-    console.log("addbartek");
-    var newone = msg.text.replace("addbartek", "").trim();
+  async function  rimuoviSuRedis(mode, msg, arrayname){
+    console.log(mode);
+    if (questions && questions != ''){
+        var newone = msg.text.replace(mode, "").trim();
+        var check = questions[arrayname].filter(x=> x.includes(newone) || newone.includes(x)) ;  
+        if(check.length = 1 && questions[arrayname].filter(x=> x== newone).length == 1){
+            questions[arrayname] = questions[arrayname].filter(x=> x!= newone);
+            await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
+            delay(500).then(() => console.log('ran after .1 second1 passed'));
+            await redisClient.getJson(msg.chat.id,questionsRedisKey);
+            console.log("rimosso " + newone);
+        } else {
+            bot.sendMessage(msg.chat.id, "Non ne ho trovati: " +newone);
+            console.log("Non ne ho trovati: " +newone);
+        }
+    }
+    else {
+        bot.sendMessage(msg.chat.id, "Problemi con " + mode);
+        console.log("Problemi con " + mode);
+   
+    }
+  }
+
+
+    bot.onText(/AddIcs /, async (msg) => { 
+        aggiugiSuRedis("ComAddIcs ", msg, "ics");
+    });
+
+    bot.onText(/RemoveIcs /, async (msg) => { 
+        rimuoviSuRedis("RemoveIcs ", msg, "ics");
+    });
+
+
+    bot.onText(/AddMangiare /, async (msg) => { 
+        console.log("addmangiare");
+        var newone = msg.text.toLowerCase().replace("AddMangiare ", "").trim();
+        var check = questions.pranzo.filter(x=> x.includes(newone) || newone.includes(x)) ;
+        if(check.length == 0){
+            questions.pranzo.push(newone);
+            await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
+            await redisClient.getJson(msg.chat.id,questionsRedisKey);
+            console.log("aggiunto " + newone);
+        } else {
+            bot.sendMessage(msg.chat.id, "esiste già " + newone);
+            console.log("esiste già " +newone);
+            bot.mess
+        }
+    });
+
+  bot.onText(/AddBartek /, async (msg) => { 
+    var newone = msg.text.replace("AddBartek ", "").trim();
     var check = questions.domandone.filter(x=> x.includes(newone) || newone.includes(x)) ;
     if(check.length == 0){
         questions.domandone.push(newone);
@@ -230,6 +296,7 @@ function GiornoCambiato(){
     }
     return false;
 }
+
 function rispondi(lista){
     
     if( GiornoCambiato()) console.log("cambiato Giorno");
@@ -244,3 +311,4 @@ function rispondi(lista){
        return lista[Math.floor(Math.random() * lista.length)]
    }
 }
+//
