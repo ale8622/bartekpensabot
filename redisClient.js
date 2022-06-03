@@ -11,8 +11,19 @@ module.exports = {
         return !value? questions_bck:  JSON.parse(value);
       } catch(ex) {
          await redisClient.quit();
-         return  questions_bck;
+         return  null;
       }
+   },
+   clearKey: async function(chatId, redisKey, jsonValue)
+   {
+      try{
+        await redisClient.connect();
+        await redisClient.set(redisKey+chatId, jsonValue, { EX: 1 } );
+        await redisClient.quit();
+      } catch (ex) {
+         console.log(ex);
+         await redisClient.quit();
+      } 
    },
 
    setJson: async function(chatId, redisKey, jsonValue)
