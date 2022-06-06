@@ -1,3 +1,8 @@
+const { Constants } = require("./constants");
+const { Commands } = require("./commands");
+const redisClient = require("./redisClient")
+
+
 module.exports = {
     rispondi: function (lista){
         if( this.giornoCambiato()) console.log("cambiato Giorno");
@@ -83,6 +88,21 @@ module.exports = {
             return true;
         }
         return false;
-    }
+    },
+    
+    readMessageForUser: async function (msg) {
+        return await redisClient.getInt(msg.chat.id, msg.from.username);
+    },
+
+    setMessageForUser: async function (msg) {
+    try{
+            var num = await this.readMessageForUser(msg) ?? 0;
+            await redisClient.setInt(msg.chat.id, msg.from.username, num + 1);
+            return num + 1;
+        } catch(ex) {
+            num = 1;
+        }
+    } 
+
 }
 

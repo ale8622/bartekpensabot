@@ -30,19 +30,6 @@ async function readQuestions(msg) {
     }
  } 
 
- async function readMessageForUser(msg) {
-    return await redisClient.getInt(msg.chat.id, msg.from.username);
- } 
-
- async function setMessageForUser(msg) {
-    try{
-        var num = await readMessageForUser(msg) ?? 0;
-        await redisClient.setInt(msg.chat.id, msg.from.username, num + 1);
-        return num + 1;
-    } catch {
-        num = 1;
-    }
- } 
  
 bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log("Start from " + msg.from.username);
@@ -79,13 +66,11 @@ bot.onText(Commands.Init, async (msg) => {
 });
 
 bot.onText(Commands.Version, async (msg) => {
-    console.log('Version');
     bot.sendMessage(msg.chat.id, Constants.Version);
 });
 
 bot.onText(Commands.Help, async (msg) => {
-    console.log(utility.HelpMessage());
-    bot.sendMessage(msg.chat.id, HelpMessage());
+    bot.sendMessage(msg.chat.id, utility.helpMessage());
 });
 
 bot.onText(Commands.AddIcs, async (msg) => { 
@@ -130,7 +115,7 @@ bot.onText(Commands.RDiceCose, async (msg) => {
 });
 
 bot.onText(Commands.Mangiamo, async (msg) => {+
-    await setMessageForUser(msg);
+    await utility.setMessageForUser(msg);
     
     if(questions && questions.pranzo) {
         await redisClient.getJson(msg.chat.id,questionsRedisKey);         
@@ -156,7 +141,7 @@ bot.onText(Commands.Mangiamo, async (msg) => {+
 });
 
 bot.onText(Commands.Ics, async (msg) => {
-    await setMessageForUser(msg);
+    await utility.setMessageForUser(msg);
     if(questions && questions.domandone) {
         var quest = questions.ics.map(x=> x + " \n");
 
@@ -167,7 +152,7 @@ bot.onText(Commands.Ics, async (msg) => {
 });
 
 bot.onText(Commands.Bartek, async (msg) => {
-    await setMessageForUser(msg);
+    await utility.setMessageForUser(msg);
 
     if(questions && questions.domandone) {
         var quest = utility.rispondi(questions.domandone);
