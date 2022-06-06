@@ -74,35 +74,35 @@ bot.onText(Commands.Help, async (msg) => {
 });
 
 bot.onText(Commands.AddIcs, async (msg) => { 
-    utility.aggiugiSuRedis(Commands.AddIcs, msg, "ics");
+    utility.aggiugiSuRedis(Commands.AddIcs, msg, "ics", questions);
 });
 
 bot.onText(Commands.RemoveIcs, async (msg) => { 
-    utility.rimuoviSuRedis(Commands.RemoveIcs, msg, "ics");
+    utility.rimuoviSuRedis(Commands.RemoveIcs, msg, "ics", questions);
 });
 
 bot.onText(Commands.AddMangiamo, async (msg) => { 
-    utility.aggiugiSuRedis(Commands.AddMangiamo, msg, "pranzo");
+    utility.aggiugiSuRedis(Commands.AddMangiamo, msg, "pranzo", questions);
 });
 
 bot.onText(Commands.RemoveMangiamo, async (msg) => { 
-    utility.aggiugiSuRedis(Commands.RemoveMangiamo, msg, "pranzo");
+    utility.aggiugiSuRedis(Commands.RemoveMangiamo, msg, "pranzo", questions);
 });
 
 bot.onText(Commands.AddBartek, async (msg) => { 
-    utility.aggiugiSuRedis(Commands.AddBartek, msg, "domandone");
+    utility.aggiugiSuRedis(Commands.AddBartek, msg, "domandone", questions);
 });
 
 bot.onText(Commands.RemoveBartek, async (msg) => { 
-    utility.rimuoviSuRedis(Commands.RemoveBartek, msg, "domandone");
+    utility.rimuoviSuRedis(Commands.RemoveBartek, msg, "domandone", questions);
 });
 
 bot.onText(Commands.AddRDiceCose, async (msg) => { 
-    utility.aggiugiSuRedis(Commands.AddRDiceCose, msg, "RDiceCose");
+    utility.aggiugiSuRedis(Commands.AddRDiceCose, msg, "RDiceCose", questions);
 });
 
 bot.onText(Commands.RemoveRDiceCose, async (msg) => { 
-    utility.rimuoviSuRedis(Commands.RemoveRDiceCose, msg, "RDiceCose");
+    utility.rimuoviSuRedis(Commands.RemoveRDiceCose, msg, "RDiceCose", questions);
 });
    
 bot.onText(Commands.RDiceCose, async (msg) => {

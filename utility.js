@@ -16,7 +16,7 @@ module.exports = {
     }
     },
 
-    aggiugiSuRedis: async function  (mode, msg, arrayname){
+    aggiugiSuRedis: async function  (mode, msg, arrayname, questions){
         if (questions && questions != ''){
             var newone = msg.text.replace(mode, "").trim();
             var check = questions[arrayname].filter(x=> x.includes(newone) || newone.includes(x)) ;  
@@ -38,7 +38,7 @@ module.exports = {
         }
     },
 
-    rimuoviSuRedis: async function  (mode, msg, arrayname){
+    rimuoviSuRedis: async function  (mode, msg, arrayname, questions){
         console.log(mode);
         if (questions && questions != ''){
             var newone = msg.text.replace(mode, "").trim();
