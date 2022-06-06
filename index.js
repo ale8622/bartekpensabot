@@ -166,7 +166,7 @@ bot.onText(Commands.Version, async (msg) => {
     bot.sendMessage(msg.chat.id, Constants.Version);
 });
 
-bot.onText(Commands.Helè, async (msg) => {
+bot.onText(Commands.Help, async (msg) => {
     bot.sendMessage(msg.chat.id, "help");
 });
 
