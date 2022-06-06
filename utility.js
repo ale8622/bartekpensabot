@@ -16,51 +16,6 @@ module.exports = {
     }
     },
 
-    aggiugiSuRedis: async function  (mode, msg, arrayname, questions){
-        if (questions && questions != ''){
-            var newone = msg.text.replace(mode, "").trim();
-            var check = questions[arrayname].filter(x=> x.includes(newone) || newone.includes(x)) ;  
-            if(check.length == 0){
-                questions[arrayname].push(newone);
-                await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
-                this.delay(100).then(() => console.log('ran after .1 second1 passed'));
-                await redisClient.getJson(msg.chat.id,questionsRedisKey);
-                console.log("aggiunto " + newone);
-                bot.sendMessage(msg.chat.id, "Aggiuto:  " +newone);
-            } else {
-                bot.sendMessage(msg.chat.id, "esiste già " +newone);
-                console.log("esiste già " +newone);
-            }
-        }
-        else {
-            bot.sendMessage(msg.chat.id, "Problemi com " + mode);
-            console.log("Problemi com " + mode);
-        }
-    },
-
-    rimuoviSuRedis: async function  (mode, msg, arrayname, questions){
-        console.log(mode);
-        if (questions && questions != ''){
-            var newone = msg.text.replace(mode, "").trim();
-            var check = questions[arrayname].filter(x=> x.includes(newone) || newone.includes(x)) ;  
-            if(check.length = 1 && questions[arrayname].filter(x=> x== newone).length == 1){
-                questions[arrayname] = questions[arrayname].filter(x=> x!= newone);
-                await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
-                this.delay(100).then(() => console.log('ran after .1 second1 passed'));
-                await redisClient.getJson(msg.chat.id,questionsRedisKey);
-                console.log("rimosso " + newone);
-                bot.sendMessage(msg.chat.id, "Rimosso:  " +newone);
-            } else {
-                bot.sendMessage(msg.chat.id, "Non ne ho trovati: " +newone);
-                console.log("Non ne ho trovati: " +newone);
-            }
-        }
-        else {
-            bot.sendMessage(msg.chat.id, "Problemi con " + mode);
-            console.log("Problemi con " + mode);
-        }
-    },
-    
     delay: function (time) {
         return new Promise(resolve => setTimeout(resolve, time));
     },
@@ -92,17 +47,8 @@ module.exports = {
     
     readMessageForUser: async function (msg) {
         return await redisClient.getInt(msg.chat.id, msg.from.username);
-    },
+    }
 
-    setMessageForUser: async function (msg) {
-    try{
-            var num = await this.readMessageForUser(msg) ?? 0;
-            await redisClient.setInt(msg.chat.id, msg.from.username, num + 1);
-            return num + 1;
-        } catch(ex) {
-            num = 1;
-        }
-    } 
 
 }
 

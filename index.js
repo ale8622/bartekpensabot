@@ -20,20 +20,32 @@ var dayOfWeek_global  = today_global.getDay();
 async function readQuestions(msg) {
     console.log("Leggo da redis (readQuestions)");
     try{
-        console.log("Leggo da redis");
+        console.log("legegndo da redis");
         return await redisClient.getJson(msg.chat.id,questionsRedisKey);
     } 
     catch (ex){
-        console.log("non riesco a leggere da redis");
+        console.log("Non riesco a leggere da redis");
         console.log(ex);
         return null;
     }
  } 
 
+ async function readMessageForUser(msg) {
+    return await redisClient.getInt(msg.chat.id, msg.from.username);
+ } 
+
+ async function     setMessageForUser(msg) {
+    try{
+        var num = await readMessageForUser(msg) ?? 0;
+        await redisClient.setInt(msg.chat.id, msg.from.username, num + 1);
+        return num + 1;
+    } catch {
+        num = 1;
+    }
+ } 
  
 bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log("Start from " + msg.from.username);
-    utility.delay(500).then(() => console.log('ran after .5 second passed'));
     bot.sendMessage(msg.chat.id, Constants.WelcomeMessage, {
         reply_markup : {
             keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose],],
@@ -44,16 +56,17 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     questions = await readQuestions(msg);
     console.log("Read redis values");
     if(!questions) {
+       console.log("Init redis values");
        utility.delay(500).then(() => console.log('ran after .1 second1 passed'));
-       await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
+       redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
        questions = questions_bck;
        console.log("Init redis values - ended");
     }else {
-        console.log("Reading redis values");
+        console.log("Setting the redis values");
         await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
     }
     console.log("In questions");
-    console.log(questions.length);
+    console.log(questions);
 
 });
 
@@ -74,35 +87,35 @@ bot.onText(Commands.Help, async (msg) => {
 });
 
 bot.onText(Commands.AddIcs, async (msg) => { 
-    utility.aggiugiSuRedis(Commands.AddIcs, msg, "ics", questions);
+    aggiugiSuRedis(Commands.AddIcs, msg, "ics");
 });
 
 bot.onText(Commands.RemoveIcs, async (msg) => { 
-    utility.rimuoviSuRedis(Commands.RemoveIcs, msg, "ics", questions);
+    rimuoviSuRedis(Commands.RemoveIcs, msg, "ics");
 });
 
 bot.onText(Commands.AddMangiamo, async (msg) => { 
-    utility.aggiugiSuRedis(Commands.AddMangiamo, msg, "pranzo", questions);
+    aggiugiSuRedis(Commands.AddMangiamo, msg, "pranzo");
 });
 
 bot.onText(Commands.RemoveMangiamo, async (msg) => { 
-    utility.aggiugiSuRedis(Commands.RemoveMangiamo, msg, "pranzo", questions);
+    aggiugiSuRedis(Commands.RemoveMangiamo, msg, "pranzo");
 });
 
 bot.onText(Commands.AddBartek, async (msg) => { 
-    utility.aggiugiSuRedis(Commands.AddBartek, msg, "domandone", questions);
+    aggiugiSuRedis(Commands.AddBartek, msg, "domandone");
 });
 
 bot.onText(Commands.RemoveBartek, async (msg) => { 
-    utility.rimuoviSuRedis(Commands.RemoveBartek, msg, "domandone", questions);
+    rimuoviSuRedis(Commands.RemoveBartek, msg, "domandone");
 });
 
 bot.onText(Commands.AddRDiceCose, async (msg) => { 
-    utility.aggiugiSuRedis(Commands.AddRDiceCose, msg, "RDiceCose", questions);
+    aggiugiSuRedis(Commands.AddRDiceCose, msg, "RDiceCose");
 });
 
 bot.onText(Commands.RemoveRDiceCose, async (msg) => { 
-    utility.rimuoviSuRedis(Commands.RemoveRDiceCose, msg, "RDiceCose", questions);
+    rimuoviSuRedis(Commands.RemoveRDiceCose, msg, "RDiceCose");
 });
    
 bot.onText(Commands.RDiceCose, async (msg) => {
@@ -115,7 +128,7 @@ bot.onText(Commands.RDiceCose, async (msg) => {
 });
 
 bot.onText(Commands.Mangiamo, async (msg) => {+
-    await utility.setMessageForUser(msg);
+    await setMessageForUser(msg);
     
     if(questions && questions.pranzo) {
         await redisClient.getJson(msg.chat.id,questionsRedisKey);         
@@ -141,7 +154,7 @@ bot.onText(Commands.Mangiamo, async (msg) => {+
 });
 
 bot.onText(Commands.Ics, async (msg) => {
-    await utility.setMessageForUser(msg);
+    await setMessageForUser(msg);
     if(questions && questions.domandone) {
         var quest = questions.ics.map(x=> x + " \n");
 
@@ -152,7 +165,7 @@ bot.onText(Commands.Ics, async (msg) => {
 });
 
 bot.onText(Commands.Bartek, async (msg) => {
-    await utility.setMessageForUser(msg);
+    await setMessageForUser(msg);
 
     if(questions && questions.domandone) {
         var quest = utility.rispondi(questions.domandone);
@@ -161,3 +174,52 @@ bot.onText(Commands.Bartek, async (msg) => {
         bot.sendMessage(msg.chat.id, whats);
     }
 });
+
+
+ async function  aggiugiSuRedis(mode, msg, arrayname){
+    if (questions && questions != ''){
+        var newone = msg.text.replace(mode, "").trim();
+        var check = questions[arrayname].filter(x=> x.includes(newone) || newone.includes(x)) ;  
+        if(check.length == 0){
+            questions[arrayname].push(newone);
+            await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
+            utility.delay(100).then(() => console.log('ran after .1 second1 passed'));
+            await redisClient.getJson(msg.chat.id,questionsRedisKey);
+            console.log("aggiunto " + newone);
+            bot.sendMessage(msg.chat.id, "Aggiuto:  " +newone);
+            return true;
+        } else {
+            bot.sendMessage(msg.chat.id, "esiste già " +newone);
+            console.log("esiste già " +newone);
+            return false;
+        }
+    }
+    else {
+        bot.sendMessage(msg.chat.id, "Problemi com " + mode);
+        console.log("Problemi com " + mode);
+        return false;
+    }
+};
+
+ async function  rimuoviSuRedis(mode, msg, arrayname){
+    console.log(mode);
+    if (questions && questions != ''){
+        var newone = msg.text.replace(mode, "").trim();
+        var check = questions[arrayname].filter(x=> x.includes(newone) || newone.includes(x)) ;  
+        if(check.length = 1 && questions[arrayname].filter(x=> x== newone).length == 1){
+            questions[arrayname] = questions[arrayname].filter(x=> x!= newone);
+            await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
+            utility.delay(100).then(() => console.log('ran after .1 second1 passed'));
+            await redisClient.getJson(msg.chat.id,questionsRedisKey);
+            console.log("rimosso " + newone);
+            bot.sendMessage(msg.chat.id, "Rimosso:  " +newone);
+        } else {
+            bot.sendMessage(msg.chat.id, "Non ne ho trovati: " +newone);
+            console.log("Non ne ho trovati: " +newone);
+        }
+    }
+    else {
+        bot.sendMessage(msg.chat.id, "Problemi con " + mode);
+        console.log("Problemi con " + mode);
+    }
+}
