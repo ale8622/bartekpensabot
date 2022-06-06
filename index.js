@@ -80,6 +80,8 @@ bot.onText(Commands.Init, async (msg) => {
     perPranzo = 0;
     questions = await readQuestions(msg);
     console.log("Init from " + msg.from.username);
+    bot.sendMessage(msg.chat.id, "done");
+ 
 });
 
 bot.onText(Commands.Version, async (msg) => {
@@ -88,8 +90,8 @@ bot.onText(Commands.Version, async (msg) => {
 });
 
 bot.onText(Commands.Help, async (msg) => {
-    console.log('Help');
-    bot.sendMessage(msg.chat.id, "help");
+    console.log(HelpMessage());
+    bot.sendMessage(msg.chat.id, HelpMessage());
 });
 
 bot.onText(Commands.AddIcs, async (msg) => { 
@@ -265,3 +267,18 @@ function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
   }
   
+function  HelpMessage(){
+
+    var risposta = Commands.AddBartek + " <tx>: to Add New answer to " + Constants.Question +"";
+    risposta += "\n" + Commands.RemoveBartek + " <tx>: to Remove an answer to " + Constants.Question +"";
+    risposta += "\n" + Commands.AddIcs + " <tx>: to Add New item to the " + Constants.Ics +" list";
+    risposta += "\n" + Commands.RemoveIcs + " <tx>: to Remove an item to the " + Constants.Ics +" list";
+    risposta += "\n" + Commands.AddMangiamo + " <tx>: to Add New place where we can EAT " + Constants.Lunch +"";
+    risposta += "\n" + Commands.RemoveMangiamo + " <tx>: to Remove a place where we can EAT " + Constants.Lunch +"";
+    risposta += "\n" + Commands.AddRDiceCose + " <tx>: to Add New Smart Eclamation to " + Constants.RDiceCose +"";
+    risposta += "\n" + Commands.RemoveRDiceCose + " <tx>: to Remove an Esclamation to " + Constants.RDiceCose +"";
+    risposta += "\n" + Commands.Version + " the current version.";
+    risposta += "\n" + Commands.Init + " WIP";
+
+    return risposta;
+}
