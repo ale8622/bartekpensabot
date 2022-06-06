@@ -33,6 +33,7 @@ async function readQuestions(msg) {
  
 bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log("Start from " + msg.from.username);
+    utility.delay(500).then(() => console.log('ran after .5 second passed'));
     bot.sendMessage(msg.chat.id, Constants.WelcomeMessage, {
         reply_markup : {
             keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose],],
@@ -43,7 +44,6 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     questions = await readQuestions(msg);
     console.log("Read redis values");
     if(!questions) {
-       console.log("Init redis values");
        utility.delay(500).then(() => console.log('ran after .1 second1 passed'));
        await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
        questions = questions_bck;
