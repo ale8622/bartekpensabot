@@ -3,6 +3,8 @@ const emoji = require("node-emoji");
 module.exports.Commands = {
     Start : "Start",
     Init : /init/,
+    Version : /Version/,
+    Help : /--help/,
     AddIcs : /IcsAdd /,
     RemoveIcs : /IcsRemove /,
     AddMangiamo : /MangiareAdd /,
@@ -19,6 +21,8 @@ module.exports.Commands = {
    module.exports.CommandsFake = {
     Start : "No sStart",
     Init : /No init/,
+    Version : /No Version/,
+    Help : /No --help/,
     AddIcs : /No IcsAdd /,
     RemoveIcs : /No IcsRemove /,
     AddMangiamo : /No MangiareAdd /,

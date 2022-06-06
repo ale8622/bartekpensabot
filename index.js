@@ -7,7 +7,7 @@ const questionsRedisKey = "questions";
 const questions_bck = require('./questions.json');
 const whats ="Cosa?";
 const TelegramBot =require('node-telegram-bot-api');
-const { setJson } = require("./redisClient");
+const { setJson, getJson } = require("./redisClient");
 const bot = new TelegramBot(process.env.BOT_API_KEY, {polling:true});
 var id_message_start ="";
 var questions = "";
@@ -162,7 +162,15 @@ bot.onText(/sistema/, async (msg) => {
     return;
 });
 
- bot.onText(Commands.RDiceCose, async (msg) => {
+bot.onText(Commands.Version, async (msg) => {
+    bot.sendMessage(msg.chat.id, Constants.Version);
+});
+
+bot.onText(Commands.Helè, async (msg) => {
+    bot.sendMessage(msg.chat.id, "help");
+});
+
+bot.onText(Commands.RDiceCose, async (msg) => {
     if(questions && questions.RDiceCose) {
         var quest = rispondi(questions.RDiceCose);
         bot.sendMessage( msg.chat.id, "R. dice: " +  quest);
@@ -171,8 +179,13 @@ bot.onText(/sistema/, async (msg) => {
     }
 });
 
-bot.onText(Commands.Mangiamo, async (msg) => {
+bot.onText(Commands.Mangiamo, async (msg) => {+
     await setMessageForUser(msg);
+    
+    if(questions && questions.pranzo) {
+        await redisClient.getJson(msg.chat.id,questionsRedisKey);         
+    }
+
     if( GiornoCambiato()) console.log("Cambiato Giorno");
     if(perPranzo <= 0) {
         if(questions && questions.pranzo) {
@@ -199,11 +212,8 @@ bot.onText(Commands.Ics, async (msg) => {
 });
 
 bot.onText(Commands.Bartek, async (msg) => {
-    try{
-        await setMessageForUser(msg);
-    } catch(ex) {
-        console.log(ex.message);
-    }
+    await setMessageForUser(msg);
+
     if(questions && questions.domandone) {
         var quest = rispondi(questions.domandone);
         bot.sendMessage(msg.chat.id, "Bartek si Domanda: \n" + quest);
