@@ -45,7 +45,7 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     if(!questions) {
        console.log("Init redis values");
        utility.delay(500).then(() => console.log('ran after .1 second1 passed'));
-       redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
+       await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
        questions = questions_bck;
        console.log("Init redis values - ended");
     }else {
