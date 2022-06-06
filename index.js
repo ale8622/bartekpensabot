@@ -53,7 +53,7 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
         await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
     }
     console.log("In questions");
-    console.log(questions);
+    console.log(questions.length);
 
 });
 
