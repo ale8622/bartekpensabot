@@ -1,6 +1,6 @@
 module.exports = {
     rispondi: function (lista){
-        if( giornoCambiato()) console.log("cambiato Giorno");
+        if( this.giornoCambiato()) console.log("cambiato Giorno");
         var isFriday = (new Date().getDay() === 5) ; 
         if(isFriday && done < friday.esclamazioni.length) {  
             perPranzo = -1;   
@@ -18,7 +18,7 @@ module.exports = {
             if(check.length == 0){
                 questions[arrayname].push(newone);
                 await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
-                delay(100).then(() => console.log('ran after .1 second1 passed'));
+                this.delay(100).then(() => console.log('ran after .1 second1 passed'));
                 await redisClient.getJson(msg.chat.id,questionsRedisKey);
                 console.log("aggiunto " + newone);
                 bot.sendMessage(msg.chat.id, "Aggiuto:  " +newone);
@@ -41,7 +41,7 @@ module.exports = {
             if(check.length = 1 && questions[arrayname].filter(x=> x== newone).length == 1){
                 questions[arrayname] = questions[arrayname].filter(x=> x!= newone);
                 await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
-                delay(500).then(() => console.log('ran after .1 second1 passed'));
+                this.delay(100).then(() => console.log('ran after .1 second1 passed'));
                 await redisClient.getJson(msg.chat.id,questionsRedisKey);
                 console.log("rimosso " + newone);
                 bot.sendMessage(msg.chat.id, "Rimosso:  " +newone);
@@ -80,9 +80,6 @@ module.exports = {
     giornoCambiato: function (dayOfWeek_global ){
         var dayOfWeek = new Date().getDay();
         if(dayOfWeek_global != dayOfWeek) {
-            dayOfWeek_global =  dayOfWeek;
-            done = 0;
-            perPranzo = 0;
             return true;
         }
         return false;

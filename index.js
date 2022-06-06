@@ -10,15 +10,11 @@ const whats ="Cosa?";
 const TelegramBot =require('node-telegram-bot-api');
 const { setJson, getJson } = require("./redisClient");
 const bot = new TelegramBot(process.env.BOT_API_KEY, {polling:true});
-var id_message_start ="";
 var questions = "";
-
-
 var done = 0;
 var perPranzo = 0;
 var today_global = new Date();
 var dayOfWeek_global  = today_global.getDay();
-var menutoogle = true;
 
 
 async function readQuestions(msg) {
@@ -62,7 +58,7 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     if(!questions) {
        console.log("Init redis values");
        utility.delay(500).then(() => console.log('ran after .1 second1 passed'));
-       await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
+       redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
        questions = questions_bck;
        console.log("Init redis values - ended");
     }else {
@@ -73,7 +69,6 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log(questions);
 
 });
-
 
 /* */
 bot.onText(Commands.Init, async (msg) => {
@@ -125,22 +120,9 @@ bot.onText(Commands.RemoveRDiceCose, async (msg) => {
     utility.rimuoviSuRedis(Commands.RemoveRDiceCose, msg, "RDiceCose");
 });
    
-
-bot.onText(/sistema/, async (msg) => {
-   console.log("coseeee");
-    menutoogle = !menutoogle;
-    data = !menutoogle ? 
-        {"reply_to_message_id": msg.message_id, "force_reply" : "true"}
-        :{"reply_to_message_id": msg.message_id, "reply_markup": JSON.stringify(keyboard), "force_reply" : "true"};
-    bot.sendMessage(msg.chat.id, menutoogle ? "Menu Disattivato": "Menu Attivato", data , function (isSuccess) {
-        console.log(isSuccess);
-    });
-    return;
-});
-
 bot.onText(Commands.RDiceCose, async (msg) => {
     if(questions && questions.RDiceCose) {
-        var quest = rispondi(questions.RDiceCose);
+        var quest = utility.rispondi(questions.RDiceCose);
         bot.sendMessage( msg.chat.id, "R. dice: " +  quest);
     } else {
         bot.sendMessage(msg.chat.id, whats);
@@ -154,7 +136,12 @@ bot.onText(Commands.Mangiamo, async (msg) => {+
         await redisClient.getJson(msg.chat.id,questionsRedisKey);         
     }
 
-    if( utility.giornoCambiato(dayOfWeek_global )) console.log("Cambiato Giorno");
+    if( utility.giornoCambiato(dayOfWeek_global )) {
+        dayOfWeek_global =  dayOfWeek;
+        done = 0;
+        perPranzo = 0;
+        console.log("Cambiato Giorno");
+    }
     if(perPranzo <= 0) {
         if(questions && questions.pranzo) {
             var quest = utility.rispondi(questions.pranzo);
@@ -189,4 +176,3 @@ bot.onText(Commands.Bartek, async (msg) => {
         bot.sendMessage(msg.chat.id, whats);
     }
 });
-
