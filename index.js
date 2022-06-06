@@ -1,5 +1,6 @@
 require("./app")
 const redisClient = require("./redisClient")
+const utility = require("./utility")
 const { Constants } = require("./constants");
 const { Commands } = require("./commands");
 const friday = require('./friday.json'); 
@@ -60,7 +61,7 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log("Read redis values");
     if(!questions) {
        console.log("Init redis values");
-       delay(500).then(() => console.log('ran after .1 second1 passed'));
+       utility.delay(500).then(() => console.log('ran after .1 second1 passed'));
        await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
        questions = questions_bck;
        console.log("Init redis values - ended");
@@ -80,8 +81,6 @@ bot.onText(Commands.Init, async (msg) => {
     perPranzo = 0;
     questions = await readQuestions(msg);
     console.log("Init from " + msg.from.username);
-    bot.sendMessage(msg.chat.id, "done");
- 
 });
 
 bot.onText(Commands.Version, async (msg) => {
@@ -90,40 +89,40 @@ bot.onText(Commands.Version, async (msg) => {
 });
 
 bot.onText(Commands.Help, async (msg) => {
-    console.log(HelpMessage());
+    console.log(utility.HelpMessage());
     bot.sendMessage(msg.chat.id, HelpMessage());
 });
 
 bot.onText(Commands.AddIcs, async (msg) => { 
-    aggiugiSuRedis(Commands.AddIcs, msg, "ics");
+    utility.aggiugiSuRedis(Commands.AddIcs, msg, "ics");
 });
 
 bot.onText(Commands.RemoveIcs, async (msg) => { 
-    rimuoviSuRedis(Commands.RemoveIcs, msg, "ics");
+    utility.rimuoviSuRedis(Commands.RemoveIcs, msg, "ics");
 });
 
 bot.onText(Commands.AddMangiamo, async (msg) => { 
-    aggiugiSuRedis(Commands.AddMangiamo, msg, "pranzo");
+    utility.aggiugiSuRedis(Commands.AddMangiamo, msg, "pranzo");
 });
 
 bot.onText(Commands.RemoveMangiamo, async (msg) => { 
-    aggiugiSuRedis(Commands.RemoveMangiamo, msg, "pranzo");
+    utility.aggiugiSuRedis(Commands.RemoveMangiamo, msg, "pranzo");
 });
 
 bot.onText(Commands.AddBartek, async (msg) => { 
-    aggiugiSuRedis(Commands.AddBartek, msg, "domandone");
+    utility.aggiugiSuRedis(Commands.AddBartek, msg, "domandone");
 });
 
 bot.onText(Commands.RemoveBartek, async (msg) => { 
-    rimuoviSuRedis(Commands.RemoveBartek, msg, "domandone");
+    utility.rimuoviSuRedis(Commands.RemoveBartek, msg, "domandone");
 });
 
 bot.onText(Commands.AddRDiceCose, async (msg) => { 
-    aggiugiSuRedis(Commands.AddRDiceCose, msg, "RDiceCose");
+    utility.aggiugiSuRedis(Commands.AddRDiceCose, msg, "RDiceCose");
 });
 
 bot.onText(Commands.RemoveRDiceCose, async (msg) => { 
-    rimuoviSuRedis(Commands.RemoveRDiceCose, msg, "RDiceCose");
+    utility.rimuoviSuRedis(Commands.RemoveRDiceCose, msg, "RDiceCose");
 });
    
 
@@ -155,10 +154,10 @@ bot.onText(Commands.Mangiamo, async (msg) => {+
         await redisClient.getJson(msg.chat.id,questionsRedisKey);         
     }
 
-    if( GiornoCambiato()) console.log("Cambiato Giorno");
+    if( utility.giornoCambiato(dayOfWeek_global )) console.log("Cambiato Giorno");
     if(perPranzo <= 0) {
         if(questions && questions.pranzo) {
-            var quest = rispondi(questions.pranzo);
+            var quest = utility.rispondi(questions.pranzo);
             bot.sendMessage(msg.chat.id, "Oggi Mangerai da \n" + quest);
         } else {
             bot.sendMessage(msg.chat.id, whats);
@@ -184,101 +183,10 @@ bot.onText(Commands.Bartek, async (msg) => {
     await setMessageForUser(msg);
 
     if(questions && questions.domandone) {
-        var quest = rispondi(questions.domandone);
+        var quest = utility.rispondi(questions.domandone);
         bot.sendMessage(msg.chat.id, "Bartek si Domanda: \n" + quest);
     } else {
         bot.sendMessage(msg.chat.id, whats);
     }
 });
 
-
-
-function GiornoCambiato(){
-    var dayOfWeek = new Date().getDay();
-    if(dayOfWeek_global != dayOfWeek) {
-        dayOfWeek_global =  dayOfWeek;
-        done = 0;
-        perPranzo = 0;
-        return true;
-    }
-    return false;
-}
-
-
-function rispondi(lista){
-    
-    if( GiornoCambiato()) console.log("cambiato Giorno");
-    var isFriday = (new Date().getDay() === 5) ; 
-    if(isFriday && done < friday.esclamazioni.length) {  
-        perPranzo = -1;   
-        return friday.esclamazioni[done++] 
-   }
-   else{
-       return lista[Math.floor(Math.random() * lista.length)]
-   }
-}
-
-async function  aggiugiSuRedis(mode, msg, arrayname){
-    if (questions && questions != ''){
-        var newone = msg.text.replace(mode, "").trim();
-        var check = questions[arrayname].filter(x=> x.includes(newone) || newone.includes(x)) ;  
-        if(check.length == 0){
-            questions[arrayname].push(newone);
-            await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
-            delay(100).then(() => console.log('ran after .1 second1 passed'));
-            await redisClient.getJson(msg.chat.id,questionsRedisKey);
-            console.log("aggiunto " + newone);
-            bot.sendMessage(msg.chat.id, "Aggiuto:  " +newone);
-        } else {
-            bot.sendMessage(msg.chat.id, "esiste già " +newone);
-            console.log("esiste già " +newone);
-        }
-    }
-    else {
-        bot.sendMessage(msg.chat.id, "Problemi com " + mode);
-        console.log("Problemi com " + mode);
-    }
-  }
-
-  async function  rimuoviSuRedis(mode, msg, arrayname){
-    console.log(mode);
-    if (questions && questions != ''){
-        var newone = msg.text.replace(mode, "").trim();
-        var check = questions[arrayname].filter(x=> x.includes(newone) || newone.includes(x)) ;  
-        if(check.length = 1 && questions[arrayname].filter(x=> x== newone).length == 1){
-            questions[arrayname] = questions[arrayname].filter(x=> x!= newone);
-            await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
-            delay(500).then(() => console.log('ran after .1 second1 passed'));
-            await redisClient.getJson(msg.chat.id,questionsRedisKey);
-            console.log("rimosso " + newone);
-            bot.sendMessage(msg.chat.id, "Rimosso:  " +newone);
-        } else {
-            bot.sendMessage(msg.chat.id, "Non ne ho trovati: " +newone);
-            console.log("Non ne ho trovati: " +newone);
-        }
-    }
-    else {
-        bot.sendMessage(msg.chat.id, "Problemi con " + mode);
-        console.log("Problemi con " + mode);
-    }
-  }
-  
-function delay(time) {
-    return new Promise(resolve => setTimeout(resolve, time));
-  }
-  
-function  HelpMessage(){
-
-    var risposta = Commands.AddBartek + " <tx>: to Add New answer to " + Constants.Question +"";
-    risposta += "\n" + Commands.RemoveBartek + " <tx>: to Remove an answer to " + Constants.Question +"";
-    risposta += "\n" + Commands.AddIcs + " <tx>: to Add New item to the " + Constants.Ics +" list";
-    risposta += "\n" + Commands.RemoveIcs + " <tx>: to Remove an item to the " + Constants.Ics +" list";
-    risposta += "\n" + Commands.AddMangiamo + " <tx>: to Add New place where we can EAT " + Constants.Lunch +"";
-    risposta += "\n" + Commands.RemoveMangiamo + " <tx>: to Remove a place where we can EAT " + Constants.Lunch +"";
-    risposta += "\n" + Commands.AddRDiceCose + " <tx>: to Add New Smart Eclamation to " + Constants.RDiceCose +"";
-    risposta += "\n" + Commands.RemoveRDiceCose + " <tx>: to Remove an Esclamation to " + Constants.RDiceCose +"";
-    risposta += "\n" + Commands.Version + " the current version.";
-    risposta += "\n" + Commands.Init + " WIP";
-
-    return risposta;
-}
