@@ -1,10 +1,8 @@
-const emoji = require("node-emoji");
-
 module.exports.Commands = {
     Start : "Start",
     Init : /init/,
-    Version : /Version/,
-    Help : /--help/,
+    Version :/Version/,
+    Help : /Help/,
     AddIcs : /IcsAdd /,
     RemoveIcs : /IcsRemove /,
     AddMangiamo : /MangiareAdd /,

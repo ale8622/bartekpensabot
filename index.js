@@ -23,6 +23,7 @@ var menutoogle = true;
 async function readQuestions(msg) {
     console.log("Leggo da redis (readQuestions)");
     try{
+        console.log("Leggo da redis");
         return await redisClient.getJson(msg.chat.id,questionsRedisKey);
     } 
     catch (ex){
@@ -46,22 +47,8 @@ async function readQuestions(msg) {
     }
  } 
  
-// bot.on("message", async (msg) => {
-//     var n = await setMessageForUser(msg);
-//         if (n> 4)  {
-//             console.log(msg.from.username + "! Clicca di meno merda!");
-//         }
-//     }
-// );
-
-
-
-//
-
-
-  bot.onText(/^[\/]{1}Start/, async (msg) => {
+bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log("Start from " + msg.from.username);
-    delay(500).then(() => console.log('ran after time second1 passed'));
     bot.sendMessage(msg.chat.id, Constants.WelcomeMessage, {
         reply_markup : {
             keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose],],
@@ -73,12 +60,12 @@ async function readQuestions(msg) {
     console.log("Read redis values");
     if(!questions) {
        console.log("Init redis values");
-       
        delay(500).then(() => console.log('ran after .1 second1 passed'));
        await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
        questions = questions_bck;
        console.log("Init redis values - ended");
     }else {
+        console.log("Reading redis values");
         await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
     }
     console.log("In questions");
@@ -86,6 +73,8 @@ async function readQuestions(msg) {
 
 });
 
+
+/* */
 bot.onText(Commands.Init, async (msg) => {
     done = 0;
     perPranzo = 0;
@@ -93,63 +82,49 @@ bot.onText(Commands.Init, async (msg) => {
     console.log("Init from " + msg.from.username);
 });
 
-bot.on('callback_query', function onCallbackQuery(msg) {
-    // increment counter when everytime the button is pressed
-    console.log('callback_query');
-    bot.on('message', message => {
-        console.log(message);
-    });
-id_message_start = msg.message_id;
-    menutoogle
-    var data_after = { 
-        "reply_to_message_id": id_message_start==""?  msg.message_id: id_message_start,
-        "force_reply" : "true"
-    };
+bot.onText(Commands.Version, async (msg) => {
+    console.log('Version');
+    bot.sendMessage(msg.chat.id, Constants.Version);
+});
 
-    if(msg.data){
-        bot.sendMessage(msg.message.chat.id, msg.data, data_after);
-    } else {
+bot.onText(Commands.Help, async (msg) => {
+    console.log('Help');
+    bot.sendMessage(msg.chat.id, "help");
+});
 
-    }
+bot.onText(Commands.AddIcs, async (msg) => { 
+    aggiugiSuRedis(Commands.AddIcs, msg, "ics");
+});
 
-  });
+bot.onText(Commands.RemoveIcs, async (msg) => { 
+    rimuoviSuRedis(Commands.RemoveIcs, msg, "ics");
+});
 
-//
+bot.onText(Commands.AddMangiamo, async (msg) => { 
+    aggiugiSuRedis(Commands.AddMangiamo, msg, "pranzo");
+});
 
-    bot.onText(Commands.AddIcs, async (msg) => { 
-        aggiugiSuRedis(Commands.AddIcs, msg, "ics");
-    });
+bot.onText(Commands.RemoveMangiamo, async (msg) => { 
+    aggiugiSuRedis(Commands.RemoveMangiamo, msg, "pranzo");
+});
 
-    bot.onText(Commands.RemoveIcs, async (msg) => { 
-        rimuoviSuRedis(Commands.RemoveIcs, msg, "ics");
-    });
+bot.onText(Commands.AddBartek, async (msg) => { 
+    aggiugiSuRedis(Commands.AddBartek, msg, "domandone");
+});
 
-    bot.onText(Commands.AddMangiamo, async (msg) => { 
-        aggiugiSuRedis(Commands.AddMangiamo, msg, "pranzo");
-    });
+bot.onText(Commands.RemoveBartek, async (msg) => { 
+    rimuoviSuRedis(Commands.RemoveBartek, msg, "domandone");
+});
 
-    bot.onText(Commands.RemoveMangiamo, async (msg) => { 
-        aggiugiSuRedis(Commands.RemoveMangiamo, msg, "pranzo");
-    });
+bot.onText(Commands.AddRDiceCose, async (msg) => { 
+    aggiugiSuRedis(Commands.AddRDiceCose, msg, "RDiceCose");
+});
 
-    bot.onText(Commands.AddBartek, async (msg) => { 
-        aggiugiSuRedis(Commands.AddBartek, msg, "domandone");
-    });
+bot.onText(Commands.RemoveRDiceCose, async (msg) => { 
+    rimuoviSuRedis(Commands.RemoveRDiceCose, msg, "RDiceCose");
+});
+   
 
-    bot.onText(Commands.RemoveBartek, async (msg) => { 
-        rimuoviSuRedis(Commands.RemoveBartek, msg, "domandone");
-    });
-
-    
-    bot.onText(Commands.AddRDiceCose, async (msg) => { 
-        aggiugiSuRedis(Commands.AddRDiceCose, msg, "RDiceCose");
-    });
-
-    bot.onText(Commands.RemoveRDiceCose, async (msg) => { 
-        rimuoviSuRedis(Commands.RemoveRDiceCose, msg, "RDiceCose");
-    });
-
-    
 bot.onText(/sistema/, async (msg) => {
    console.log("coseeee");
     menutoogle = !menutoogle;
@@ -160,14 +135,6 @@ bot.onText(/sistema/, async (msg) => {
         console.log(isSuccess);
     });
     return;
-});
-
-bot.onText(Commands.Version, async (msg) => {
-    bot.sendMessage(msg.chat.id, Constants.Version);
-});
-
-bot.onText(Commands.Help, async (msg) => {
-    bot.sendMessage(msg.chat.id, "help");
 });
 
 bot.onText(Commands.RDiceCose, async (msg) => {
@@ -222,6 +189,8 @@ bot.onText(Commands.Bartek, async (msg) => {
     }
 });
 
+
+
 function GiornoCambiato(){
     var dayOfWeek = new Date().getDay();
     if(dayOfWeek_global != dayOfWeek) {
@@ -232,6 +201,7 @@ function GiornoCambiato(){
     }
     return false;
 }
+
 
 function rispondi(lista){
     
@@ -295,4 +265,3 @@ function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
   }
   
-//

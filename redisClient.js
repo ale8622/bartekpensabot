@@ -8,9 +8,11 @@ module.exports = {
         await redisClient.connect();
         const value = await redisClient.get(redisKey+chatId);
         await redisClient.quit();
+        console.log("ok redis");
         return !value? questions_bck:  JSON.parse(value);
       } catch(ex) {
-         await redisClient.quit();
+         console.log("ex redis " + ex);
+         redisClient.quit();
          return  null;
       }
    },
