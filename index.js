@@ -117,6 +117,20 @@ bot.onText(Commands.AddRDiceCose, async (msg) => {
 bot.onText(Commands.RemoveRDiceCose, async (msg) => { 
     rimuoviSuRedis(Commands.RemoveRDiceCose, msg, "RDiceCose");
 });
+
+bot.onText(Commands.AllRDiceCose, async (msg) => { 
+    ElencaTutti(msg, questions.RDiceCose);
+});
+
+bot.onText(Commands.AllMangiamo, async (msg) => { 
+    ElencaTutti(msg, questions.pranzo);
+});
+
+bot.onText(Commands.AllBartek, async (msg) => { 
+    ElencaTutti(msg, questions.domandone);
+});
+
+
    
 bot.onText(Commands.RDiceCose, async (msg) => {
     if(questions && questions.RDiceCose) {
@@ -155,14 +169,17 @@ bot.onText(Commands.Mangiamo, async (msg) => {+
 
 bot.onText(Commands.Ics, async (msg) => {
     await setMessageForUser(msg);
-    if(questions && questions.domandone) {
-        var quest = questions.ics.map(x=> x + " \n");
+    ElencaTutti(msg, questions.ics);    
+});
 
+async function  ElencaTutti(msg, list) {
+    if(list) {
+        var quest = list.map(x=> x + " \n");
         bot.sendMessage(msg.chat.id, "Questi sono ICS: \n" +quest);
     } else {
         bot.sendMessage(msg.chat.id, whats);
     }
-});
+};
 
 bot.onText(Commands.Bartek, async (msg) => {
     await setMessageForUser(msg);
