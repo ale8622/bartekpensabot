@@ -2,10 +2,7 @@ require("./app")
 const redisClient = require("./redisClient")
 const utility = require("./utility")
 const { Constants } = require("./constants");
-
 const { Commands } = require("./commands");
-const friday = require('./friday.json'); 
-const questionsRedisKey = "questions";
 const questions_bck = require('./questions.json');
 const TelegramBot =require('node-telegram-bot-api');
 const { setJson, getJson } = require("./redisClient");
@@ -16,11 +13,9 @@ var perPranzo = 0;
 var today_global = new Date();
 var dayOfWeek_global  = today_global.getDay();
 
-
 async function readQuestions(msg) {
     try{
-        console.log("legegndo da redis");
-        return await redisClient.getJson(msg.chat.id,questionsRedisKey);
+        return await redisClient.getJson(msg.chat.id, Constants.questionsRedisKey);
     } 
     catch (ex){
         console.log("Non riesco a leggere da redis");
@@ -47,23 +42,21 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log("Start from " + msg.from.username);
     questions = await readQuestions(msg);
     if(!questions) {
-       console.log("Init redis values");
-       await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
-       questions = questions_bck;
-    }else {
-        console.log("Setting the redis values");
-        await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
+        questions = questions_bck;
+       await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions_bck));
+    } else {
+        await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions));
     }
-
-    await bot.sendPhoto(msg.chat.id , Constants.Tektek[Math.floor(Math.random() * Constants.Tektek.length)] , {caption: Constants.WelcomeMessage} ,{
-        reply_markup : {
-            keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose],],
-            force_reply : true
-        }
-    });
-
-
-
+    await bot.sendPhoto(msg.chat.id , 
+                        Constants.Tektek[Math.floor(Math.random() * Constants.Tektek.length)] ,
+                        {
+                            caption: Constants.WelcomeMessage ,
+                            reply_markup : {
+                                    keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose]], 
+                                force_reply : true 
+                            }
+                        }
+                        );
 });
 
 
@@ -126,22 +119,18 @@ bot.onText(Commands.AllBartek, async (msg) => {
     ElencaTutti(msg, questions.domandone, "DOMANDONI DI BARTEK");
 });
 
-
    
 bot.onText(Commands.RDiceCose, async (msg) => {
     if(questions && questions.RDiceCose) {
-        var quest = utility.rispondi(questions.RDiceCose);
-        bot.sendMessage( msg.chat.id, "R. dice: " +  quest);
+        bot.sendMessage( msg.chat.id, "R. dice: " +  utility.rispondi(questions.RDiceCose));
     } else {
         bot.sendMessage(msg.chat.id, Constants.Whats);
     }
 });
-
 bot.onText(Commands.Mangiamo, async (msg) => {+
     await setMessageForUser(msg);
-    
     if(questions && questions.pranzo) {
-        await redisClient.getJson(msg.chat.id,questionsRedisKey);         
+        await redisClient.getJson(msg.chat.id, Constants.questionsRedisKey);         
     }
 
     if( utility.giornoCambiato(dayOfWeek_global )) {
@@ -152,8 +141,7 @@ bot.onText(Commands.Mangiamo, async (msg) => {+
     }
     if(perPranzo <= 0) {
         if(questions && questions.pranzo) {
-            var quest = utility.rispondi(questions.pranzo);
-            bot.sendMessage(msg.chat.id, "Oggi Mangerai da \n" + quest);
+            bot.sendMessage(msg.chat.id, "Oggi Mangerai da \n" + utility.rispondi(questions.pranzo));
         } else {
             bot.sendMessage(msg.chat.id, Constants.Whats);
        }
@@ -170,8 +158,7 @@ bot.onText(Commands.Ics, async (msg) => {
 
 async function  ElencaTutti(msg, list, label) {
     if(list) {
-        var quest = list.map(x=> x + " \n");
-        bot.sendMessage(msg.chat.id, "Questi sono " + label + ": \n" +quest);
+        bot.sendMessage(msg.chat.id, "Questi sono " + label + ": \n" + list.map(x=> x + " \n"));
     } else {
         bot.sendMessage(msg.chat.id, Constants.Whats);
     }
@@ -179,30 +166,26 @@ async function  ElencaTutti(msg, list, label) {
 
 bot.onText(Commands.Bartek, async (msg) => {
     await setMessageForUser(msg);
-
     if(questions && questions.domandone) {
-        var quest = utility.rispondi(questions.domandone);
-        bot.sendMessage(msg.chat.id, "Bartek si Domanda: \n" + quest);
+        bot.sendMessage(msg.chat.id, "Bartek si Domanda: \n" + utility.rispondi(questions.domandone));
     } else {
         bot.sendMessage(msg.chat.id, Constants.Whats);
     }
 });
 
- async function  aggiugiSuRedis(mode, msg, arrayname){
+async function  aggiugiSuRedis(mode, msg, arrayname){
     if (questions && questions != ''){
         var newone = msg.text.replace(mode, "").replace("/", "").trim();
         var check = questions[arrayname].filter(x=> x.includes(newone) || newone.includes(x)) ;  
         if(check.length == 0){
             questions[arrayname].push(newone);
-            await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
+            await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions));
             utility.delay(100).then(() => console.log('ran after .1 second1 passed'));
-            await redisClient.getJson(msg.chat.id,questionsRedisKey);
-            console.log("aggiunto " + newone);
-            bot.sendMessage(msg.chat.id, "Aggiuto:  " +newone);
+            await redisClient.getJson(msg.chat.id, Constants.questionsRedisKey);
+            bot.sendMessage(msg.chat.id, "Aggiunto: " + newone);
             return true;
         } else {
-            bot.sendMessage(msg.chat.id, "esiste già " +newone);
-            console.log("esiste già " +newone);
+            bot.sendMessage(msg.chat.id, "Esiste già " +newone);
             return false;
         }
     }
@@ -213,21 +196,19 @@ bot.onText(Commands.Bartek, async (msg) => {
     }
 };
 
- async function  rimuoviSuRedis(mode, msg, arrayname){
+async function  rimuoviSuRedis(mode, msg, arrayname){
     console.log(mode);
     if (questions && questions != ''){
         var newone = msg.text.replace(mode, "").trim();
         var check = questions[arrayname].filter(x=> x.includes(newone) || newone.includes(x)) ;  
         if(check.length = 1 && questions[arrayname].filter(x=> x== newone).length == 1){
             questions[arrayname] = questions[arrayname].filter(x=> x!= newone);
-            await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
+            await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions));
             utility.delay(100).then(() => console.log('ran after .1 second1 passed'));
-            await redisClient.getJson(msg.chat.id,questionsRedisKey);
-            console.log("rimosso " + newone);
-            bot.sendMessage(msg.chat.id, "Rimosso:  " +newone);
+            await redisClient.getJson(msg.chat.id, Constants.questionsRedisKey);
+            bot.sendMessage(msg.chat.id, "Rimosso: " +newone);
         } else {
             bot.sendMessage(msg.chat.id, "Non ne ho trovati: " +newone);
-            console.log("Non ne ho trovati: " +newone);
         }
     }
     else {
