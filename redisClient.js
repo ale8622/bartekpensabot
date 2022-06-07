@@ -8,6 +8,18 @@ module.exports = {
         await redisClient.connect();
         const value = await redisClient.get(redisKey+chatId);
         await redisClient.quit();
+        return !value? null:  JSON.parse(value);
+      } catch(ex) {
+         await redisClient.quit();
+         return  null;
+      }
+   },   
+   getJsonQuestions: async function(chatId, redisKey)
+   {
+      try{
+        await redisClient.connect();
+        const value = await redisClient.get(redisKey+chatId);
+        await redisClient.quit();
         console.log("ok redis");
         return !value? questions_bck:  JSON.parse(value);
       } catch(ex) {
@@ -26,6 +38,13 @@ module.exports = {
          console.log(ex);
          await redisClient.quit();
       } 
+   },
+
+   setJsonWithTTL: async function(chatId, redisKey, jsonValue, ttl)
+   {
+        await redisClient.connect();
+        await redisClient.set(redisKey+chatId, jsonValue , { EX: ttl } );
+        await redisClient.quit()
    },
 
    setJson: async function(chatId, redisKey, jsonValue)

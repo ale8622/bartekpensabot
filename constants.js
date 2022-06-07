@@ -10,5 +10,6 @@ module.exports.Constants = {
     FaiCose: emoji.get('x')+" sistema",
     Whats: "Cosa?",
     questionsRedisKey : "questions",
+    mangiatoRedisKey : "doveMangiare_",
     Tektek: ["./images/MimmoTek.jpg", "./images/SashaTek.jpg", "./images/MerdaTek.jpg", "./images/FagigioTek.jpg", "./images/IoTek.jpg"]
 }

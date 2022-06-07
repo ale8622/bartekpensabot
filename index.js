@@ -5,17 +5,15 @@ const { Constants } = require("./constants");
 const { Commands } = require("./commands");
 const questions_bck = require('./questions.json');
 const TelegramBot =require('node-telegram-bot-api');
-const { setJson, getJson } = require("./redisClient");
 const bot = new TelegramBot(process.env.BOT_API_KEY, {polling:true});
 var questions = "";
 var done = 0;
-var perPranzo = 0;
 var today_global = new Date();
 var dayOfWeek_global  = today_global.getDay();
 
 async function readQuestions(msg) {
     try{
-        return await redisClient.getJson(msg.chat.id, Constants.questionsRedisKey);
+        return await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);
     } 
     catch (ex){
         console.log("Non riesco a leggere da redis");
@@ -62,7 +60,6 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
 
 bot.onText(Commands.Init, async (msg) => {
     done = 0;
-    perPranzo = 0;
     questions = await readQuestions(msg);
     console.log("Init from " + msg.from.username);
 });
@@ -127,27 +124,36 @@ bot.onText(Commands.RDiceCose, async (msg) => {
         bot.sendMessage(msg.chat.id, Constants.Whats);
     }
 });
-bot.onText(Commands.Mangiamo, async (msg) => {+
+bot.onText(Commands.Mangiamo, async (msg) => {
+    var oggi = new Date();
+    var oggi_str = oggi.getFullYear().toString() + "-"  + oggi.getMonth().toString() + "-" + oggi.getDate().toString();
     await setMessageForUser(msg);
     if(questions && questions.pranzo) {
-        await redisClient.getJson(msg.chat.id, Constants.questionsRedisKey);         
+        await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);         
     }
 
     if( utility.giornoCambiato(dayOfWeek_global )) {
-        dayOfWeek_global =  dayOfWeek;
+        dayOfWeek_global = oggi.getDay();
         done = 0;
-        perPranzo = 0;
-        console.log("Cambiato Giorno " + dayOfWeek_global);
+        console.log("Cambiato Giorno " + oggi.getDate() + " " + dayOfWeek_global);
     }
-    if(perPranzo <= 0) {
+
+    var apranzo = await redisClient.getJson(msg.chat.id, Constants.mangiatoRedisKey + oggi_str); 
+
+    if(!apranzo) {
         if(questions && questions.pranzo) {
-            bot.sendMessage(msg.chat.id, "Oggi Mangerai da \n" + utility.rispondi(questions.pranzo));
+            var dove  =utility.rispondi(questions.pranzo);
+            bot.sendMessage(msg.chat.id, "Oggi Mangerai da \n" + dove );
+            apranzo =  {"quando" :  oggi_str  , "dove": dove};
+            await redisClient.setJsonWithTTL(msg.chat.id, 
+                            Constants.mangiatoRedisKey + oggi_str, 
+                            JSON.stringify(apranzo),
+                            60 * 60 * 24); 
         } else {
             bot.sendMessage(msg.chat.id, Constants.Whats);
        }
-        perPranzo++;
     } else {
-        bot.sendMessage(msg.chat.id, msg.from.first_name + ", per Oggi ho già risposto");
+        bot.sendMessage(msg.chat.id, msg.from.first_name + ", per Oggi, "+ apranzo.quando +", ho già risposto che dovresti andare da " + apranzo.dove);
     }
 });
 
@@ -181,7 +187,7 @@ async function  aggiugiSuRedis(mode, msg, arrayname){
             questions[arrayname].push(newone);
             await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions));
             utility.delay(100).then(() => console.log('ran after .1 second1 passed'));
-            await redisClient.getJson(msg.chat.id, Constants.questionsRedisKey);
+            await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);
             bot.sendMessage(msg.chat.id, "Aggiunto: " + newone);
             return true;
         } else {
@@ -205,7 +211,7 @@ async function  rimuoviSuRedis(mode, msg, arrayname){
             questions[arrayname] = questions[arrayname].filter(x=> x!= newone);
             await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions));
             utility.delay(100).then(() => console.log('ran after .1 second1 passed'));
-            await redisClient.getJson(msg.chat.id, Constants.questionsRedisKey);
+            await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);
             bot.sendMessage(msg.chat.id, "Rimosso: " +newone);
         } else {
             bot.sendMessage(msg.chat.id, "Non ne ho trovati: " +newone);
