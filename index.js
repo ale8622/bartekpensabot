@@ -119,15 +119,15 @@ bot.onText(Commands.RemoveRDiceCose, async (msg) => {
 });
 
 bot.onText(Commands.AllRDiceCose, async (msg) => { 
-    ElencaTutti(msg, questions.RDiceCose);
+    ElencaTutti(msg, questions.RDiceCose, "COSE DETTE DA R");
 });
 
 bot.onText(Commands.AllMangiamo, async (msg) => { 
-    ElencaTutti(msg, questions.pranzo);
+    ElencaTutti(msg, questions.pranzo , "POSTI ANOCRA NON ICS");
 });
 
 bot.onText(Commands.AllBartek, async (msg) => { 
-    ElencaTutti(msg, questions.domandone);
+    ElencaTutti(msg, questions.domandone, "DOMANDONI DI BARTEK");
 });
 
 
@@ -169,13 +169,13 @@ bot.onText(Commands.Mangiamo, async (msg) => {+
 
 bot.onText(Commands.Ics, async (msg) => {
     await setMessageForUser(msg);
-    ElencaTutti(msg, questions.ics);    
+    ElencaTutti(msg, questions.ics, "ICS");    
 });
 
-async function  ElencaTutti(msg, list) {
+async function  ElencaTutti(msg, list, label) {
     if(list) {
         var quest = list.map(x=> x + " \n");
-        bot.sendMessage(msg.chat.id, "Questi sono ICS: \n" +quest);
+        bot.sendMessage(msg.chat.id, "Questi sono " + label + ": \n" +quest);
     } else {
         bot.sendMessage(msg.chat.id, whats);
     }
