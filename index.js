@@ -2,6 +2,7 @@ require("./app")
 const redisClient = require("./redisClient")
 const utility = require("./utility")
 const { Constants } = require("./constants");
+const Mimmo = "./images/MimmoTek.jpg";
 const { Commands } = require("./commands");
 const friday = require('./friday.json'); 
 const questionsRedisKey = "questions";
@@ -67,6 +68,22 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     }
     console.log("In questions");
     console.log(questions);
+
+
+    await bot.sendPhoto(msg.chat.id , Mimmo , {caption: Constants.WelcomeMessage});
+
+    bot.sendPhoto({
+        chat_id : msg.chat.id,
+        caption: 'This is my test image',
+        photo:'\images\MimmoTek.jpg'
+    }).then(function(data)
+    {
+        console.log(data);
+    });
+    
+
+
+
 
 });
 
