@@ -1,7 +1,7 @@
 const emoji = require("node-emoji");
 
 module.exports.Constants = {
-    Version: "0.0.4",
+    Version: "0.5.0",
     WelcomeMessage : "Cosa si starà chiedendo Bartek oggi?",
     Question : emoji.get('question')+" Domandati"+emoji.get('question'),
     Lunch :emoji.get('spaghetti') +" Mangiamo"+emoji.get('question'),
