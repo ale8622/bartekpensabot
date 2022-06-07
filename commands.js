@@ -1,5 +1,5 @@
 module.exports.Commands = {
-    Start : "Start",
+    Start : "/Start ",
     Init : /init/,
     Version :/Version/,
     Help : /Help/,

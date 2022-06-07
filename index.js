@@ -2,12 +2,11 @@ require("./app")
 const redisClient = require("./redisClient")
 const utility = require("./utility")
 const { Constants } = require("./constants");
-const Mimmo = "./images/MimmoTek.jpg";
+
 const { Commands } = require("./commands");
 const friday = require('./friday.json'); 
 const questionsRedisKey = "questions";
 const questions_bck = require('./questions.json');
-const whats ="Cosa?";
 const TelegramBot =require('node-telegram-bot-api');
 const { setJson, getJson } = require("./redisClient");
 const bot = new TelegramBot(process.env.BOT_API_KEY, {polling:true});
@@ -19,7 +18,6 @@ var dayOfWeek_global  = today_global.getDay();
 
 
 async function readQuestions(msg) {
-    console.log("Leggo da redis (readQuestions)");
     try{
         console.log("legegndo da redis");
         return await redisClient.getJson(msg.chat.id,questionsRedisKey);
@@ -47,47 +45,28 @@ async function readQuestions(msg) {
  
 bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log("Start from " + msg.from.username);
-    bot.sendMessage(msg.chat.id, Constants.WelcomeMessage, {
-        reply_markup : {
-            keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose],],
-            force_reply : true
-        }
-    })
-
     questions = await readQuestions(msg);
-    console.log("Read redis values");
     if(!questions) {
        console.log("Init redis values");
-       utility.delay(500).then(() => console.log('ran after .1 second1 passed'));
-       redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
+       await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions_bck));
        questions = questions_bck;
-       console.log("Init redis values - ended");
     }else {
         console.log("Setting the redis values");
         await redisClient.setJson(msg.chat.id,questionsRedisKey, JSON.stringify(questions));
     }
-    console.log("In questions");
-    console.log(questions);
 
-
-    await bot.sendPhoto(msg.chat.id , Mimmo , {caption: Constants.WelcomeMessage});
-
-    bot.sendPhoto({
-        chat_id : msg.chat.id,
-        caption: 'This is my test image',
-        photo:'\images\MimmoTek.jpg'
-    }).then(function(data)
-    {
-        console.log(data);
+    await bot.sendPhoto(msg.chat.id , Constants.Tektek[Math.floor(Math.random() * Constants.Tektek.length)] , {caption: Constants.WelcomeMessage} ,{
+        reply_markup : {
+            keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose],],
+            force_reply : true
+        }
     });
-    
-
 
 
 
 });
 
-/* */
+
 bot.onText(Commands.Init, async (msg) => {
     done = 0;
     perPranzo = 0;
@@ -154,7 +133,7 @@ bot.onText(Commands.RDiceCose, async (msg) => {
         var quest = utility.rispondi(questions.RDiceCose);
         bot.sendMessage( msg.chat.id, "R. dice: " +  quest);
     } else {
-        bot.sendMessage(msg.chat.id, whats);
+        bot.sendMessage(msg.chat.id, Constants.Whats);
     }
 });
 
@@ -176,8 +155,8 @@ bot.onText(Commands.Mangiamo, async (msg) => {+
             var quest = utility.rispondi(questions.pranzo);
             bot.sendMessage(msg.chat.id, "Oggi Mangerai da \n" + quest);
         } else {
-            bot.sendMessage(msg.chat.id, whats);
-        }
+            bot.sendMessage(msg.chat.id, Constants.Whats);
+       }
         perPranzo++;
     } else {
         bot.sendMessage(msg.chat.id, msg.from.first_name + ", per Oggi ho già risposto");
@@ -194,7 +173,7 @@ async function  ElencaTutti(msg, list, label) {
         var quest = list.map(x=> x + " \n");
         bot.sendMessage(msg.chat.id, "Questi sono " + label + ": \n" +quest);
     } else {
-        bot.sendMessage(msg.chat.id, whats);
+        bot.sendMessage(msg.chat.id, Constants.Whats);
     }
 };
 
@@ -205,7 +184,7 @@ bot.onText(Commands.Bartek, async (msg) => {
         var quest = utility.rispondi(questions.domandone);
         bot.sendMessage(msg.chat.id, "Bartek si Domanda: \n" + quest);
     } else {
-        bot.sendMessage(msg.chat.id, whats);
+        bot.sendMessage(msg.chat.id, Constants.Whats);
     }
 });
 
