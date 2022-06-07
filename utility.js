@@ -2,7 +2,6 @@ const { Constants } = require("./constants");
 const { Commands } = require("./commands");
 const redisClient = require("./redisClient")
 
-
 module.exports = {
     rispondi: function (lista){
         if( this.giornoCambiato()) console.log("cambiato Giorno");
@@ -10,10 +9,10 @@ module.exports = {
         if(isFriday && done < friday.esclamazioni.length) {  
             perPranzo = -1;   
             return friday.esclamazioni[done++] 
-    }
-    else{
-        return lista[Math.floor(Math.random() * lista.length)]
-    }
+        }
+        else{
+            return lista[Math.floor(Math.random() * lista.length)]
+        }
     },
 
     delay: function (time) {

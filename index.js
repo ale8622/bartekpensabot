@@ -138,7 +138,7 @@ bot.onText(Commands.Mangiamo, async (msg) => {+
         dayOfWeek_global =  dayOfWeek;
         done = 0;
         perPranzo = 0;
-        console.log("Cambiato Giorno");
+        console.log("Cambiato Giorno " + dayOfWeek_global);
     }
     if(perPranzo <= 0) {
         if(questions && questions.pranzo) {
@@ -175,10 +175,9 @@ bot.onText(Commands.Bartek, async (msg) => {
     }
 });
 
-
  async function  aggiugiSuRedis(mode, msg, arrayname){
     if (questions && questions != ''){
-        var newone = msg.text.replace(mode, "").trim();
+        var newone = msg.text.replace(mode, "").replace("/", "").trim();
         var check = questions[arrayname].filter(x=> x.includes(newone) || newone.includes(x)) ;  
         if(check.length == 0){
             questions[arrayname].push(newone);
