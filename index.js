@@ -13,6 +13,7 @@ var dayOfWeek_global  = today_global.getDay();
 
 async function readQuestions(msg) {
     try{
+        console.log("readQuestions");
         return await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);
     } 
     catch (ex){
@@ -142,6 +143,7 @@ bot.onText(Commands.Mangiamo, async (msg) => {
     var oggi_str = oggi.getFullYear().toString() + "-"  + oggi.getMonth().toString() + "-" + oggi.getDate().toString();
     await setMessageForUser(msg);
     if(questions && questions.pranzo) {
+        console.log(Commands.Mangiamo);
         await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);         
     }
 
@@ -205,6 +207,7 @@ async function  aggiugiSuRedis(mode, msg, arrayname){
             questions[arrayname].push(newone);
             await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions));
             utility.delay(100).then(() => console.log('ran after .1 second1 passed'));
+            console.log("aggiugiSuRedis");
             await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);
             bot.sendMessage(msg.chat.id, "Aggiunto: " + newone);
             return true;
@@ -229,6 +232,7 @@ async function  rimuoviSuRedis(mode, msg, arrayname){
             questions[arrayname] = questions[arrayname].filter(x=> x!= newone);
             await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions));
             utility.delay(100).then(() => console.log('ran after .1 second1 passed'));
+            console.log("rimuoviSuRedis");
             await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);
             bot.sendMessage(msg.chat.id, "Rimosso: " +newone);
         } else {

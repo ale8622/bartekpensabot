@@ -1,4 +1,20 @@
-module.exports.Commands = {
+module.exports.Commands = process.env.COMMAND_VERSION =="FAKE" ? 
+{
+    Start : "No sStart",
+    Init : /No init/,
+    Version : /No Version/,
+    Help : /No --help/,
+    AddIcs : /No IcsAdd /,
+    RemoveIcs : /No IcsRemove /,
+    AddMangiamo : /No MangiareAdd /,
+    AddBartek : /No BartekAdd /,
+    RemoveBartek: /No BarteKRemove /,
+    Ics : /No ics/,
+    Bartek : /No Domandati/,
+    Mangiamo : /No Mangiamo/,
+    RDiceCose: /No RDicecose/
+   } :
+   {
     Start : "/Start ",
     Init : /init/,
     Version :/Version/,
@@ -18,19 +34,4 @@ module.exports.Commands = {
     AllRDiceCose: /RDiceAll/,
     AddRDiceCose: /RDiceAdd /,
     RemoveRDiceCose: /RDiceRemove /,
-   },
-   module.exports.CommandsFake = {
-    Start : "No sStart",
-    Init : /No init/,
-    Version : /No Version/,
-    Help : /No --help/,
-    AddIcs : /No IcsAdd /,
-    RemoveIcs : /No IcsRemove /,
-    AddMangiamo : /No MangiareAdd /,
-    AddBartek : /No BartekAdd /,
-    RemoveBartek: /No BarteKRemove /,
-    Ics : /No ics/,
-    Bartek : /No Domandati/,
-    Mangiamo : /No Mangiamo/,
-    RDiceCose: /No RDicecose/
-   }
+   };
