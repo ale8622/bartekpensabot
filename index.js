@@ -29,6 +29,7 @@ async function readQuestions(msg) {
 
  async function     setMessageForUser(msg) {
     try{
+        console.log("setMessageForUser");
         var num = await readMessageForUser(msg) ?? 0;
         await redisClient.setInt(msg.chat.id, msg.from.username, num + 1);
         return num + 1;
