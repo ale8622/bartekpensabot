@@ -24,7 +24,6 @@ module.exports = {
         return !value? questions_bck:  JSON.parse(value);
       } catch(ex) {
          console.log("ex redis " + ex);
-         await redisClient.quit();
          return  null;
       }
    },
