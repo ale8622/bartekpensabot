@@ -18,6 +18,25 @@ module.exports = {
         return new Promise(resolve => setTimeout(resolve, time));
     },
     
+
+
+    ElencaTuttiFiltratiPerOggiPesati: async function( inlist, wd) {
+        var outList = [];
+        
+        if(inlist) {
+            inlist.filter(x=> x.giorni.includes(wd))
+                .map(x=> {
+                        let pesati = Array(x.peso).fill(x.nome);
+                        pesati.map(c=> outList.push(c));                
+                    });
+            return outList;
+        } else {
+            return outList;
+        }
+    },
+
+
+    
     helpMessage: function  (){
 
         var risposta = "";

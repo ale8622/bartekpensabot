@@ -109,11 +109,18 @@ bot.onText(Commands.AllRDiceCose, async (msg) => {
 });
 
 bot.onText(Commands.AllMangiamo, async (msg) => { 
-    ElencaTutti(msg, questions.pranzo , "POSTI ANOCRA NON ICS");
+    ElencaTutti(msg, questions.pranzo , "POSTI ANCORA NON ICS");
 });
 
 bot.onText(Commands.AllBartek, async (msg) => { 
     ElencaTutti(msg, questions.domandone, "DOMANDONI DI BARTEK");
+});
+bot.onText(/^[\/]{1}ppp/, async (msg) => {
+    var wd = new Date().getDay();
+    var a = await utility.ElencaTuttiFiltratiPerOggiPesati(questions.pranzoSerio, wd);
+    var dove  =utility.rispondi(a);
+    bot.sendMessage(msg.chat.id, dove);
+
 });
 
    
@@ -124,6 +131,7 @@ bot.onText(Commands.RDiceCose, async (msg) => {
         bot.sendMessage(msg.chat.id, Constants.Whats);
     }
 });
+
 bot.onText(Commands.Mangiamo, async (msg) => {
     var oggi = new Date();
     var oggi_str = oggi.getFullYear().toString() + "-"  + oggi.getMonth().toString() + "-" + oggi.getDate().toString();
@@ -142,7 +150,10 @@ bot.onText(Commands.Mangiamo, async (msg) => {
 
     if(!apranzo) {
         if(questions && questions.pranzo) {
-            var dove  =utility.rispondi(questions.pranzo);
+
+            var elencoPranzo =  questions.pranzoSerio ? await utility.ElencaTuttiFiltratiPerOggiPesati(questions.pranzoSerio, oggi.getDay()) : questions.pranzo;
+            var dove  =utility.rispondi(elencoPranzo);
+
             bot.sendMessage(msg.chat.id, "Oggi Mangerai da \n" + dove );
             apranzo =  {"quando" :  oggi_str  , "dove": dove};
             await redisClient.setJsonWithTTL(msg.chat.id, 
@@ -169,6 +180,8 @@ async function  ElencaTutti(msg, list, label) {
         bot.sendMessage(msg.chat.id, Constants.Whats);
     }
 };
+
+
 
 bot.onText(Commands.Bartek, async (msg) => {
     await setMessageForUser(msg);
