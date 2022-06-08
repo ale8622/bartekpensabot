@@ -41,7 +41,12 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     questions = await readQuestions(msg);
     if(!questions) {
         questions = questions_bck;
-       await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions_bck));
+        try{
+        await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions_bck));
+        } catch (ex) {
+            console.log("error 1");
+            console.log(ex);
+        }
     } else {
         await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions));
     }
@@ -151,7 +156,7 @@ bot.onText(Commands.Mangiamo, async (msg) => {
     if(!apranzo) {
         if(questions && questions.pranzo) {
 
-            var elencoPranzo =  questions.pranzoSerio ? await utility.ElencaTuttiFiltratiPerOggiPesati(questions.pranzoSerio, oggi.getDay()) : questions.pranzo;
+            var elencoPranzo =  questions.pranzoSerio ? await utility.ElencaTuttiFiltratiPerOggiPesati(questions_bck.pranzoSerio, oggi.getDay()) : questions.pranzo;
             var dove  =utility.rispondi(elencoPranzo);
 
             bot.sendMessage(msg.chat.id, "Oggi Mangerai da \n" + dove );

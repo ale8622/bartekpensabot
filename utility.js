@@ -4,7 +4,7 @@ const redisClient = require("./redisClient")
 
 module.exports = {
     rispondi: function (lista){
-        if( this.giornoCambiato()) console.log("cambiato Giorno " +  new Date().toDateString);
+        if( this.giornoCambiato()) console.log("cambiato Giorno " +  (new Date().toDateString()));
         var isFriday = (new Date().getDay() === 5) ; 
         if(isFriday && done < friday.esclamazioni.length) {  
             return friday.esclamazioni[done++] 
@@ -22,7 +22,6 @@ module.exports = {
 
     ElencaTuttiFiltratiPerOggiPesati: async function( inlist, wd) {
         var outList = [];
-        
         if(inlist) {
             inlist.filter(x=> x.giorni.includes(wd))
                 .map(x=> {
@@ -44,12 +43,12 @@ module.exports = {
         risposta += "\n" + Commands.RemoveBartek + " <tx>: to Remove an answer to " + Constants.Question +"";
         risposta += "\n" + Commands.AddIcs + " <tx>: to Add New item to the " + Constants.Ics +" list";
         risposta += "\n" + Commands.RemoveIcs + " <tx>: to Remove an item to the " + Constants.Ics +" list";
-        risposta += "\n" + Commands.AddMangiamo + " <tx>: to Add New place where we can EAT " + Constants.Lunch +"";
-        risposta += "\n" + Commands.RemoveMangiamo + " <tx>: to Remove a place where we can EAT " + Constants.Lunch +"";
+        //risposta += "\n" + Commands.AddMangiamo + " <tx>: to Add New place where we can EAT " + Constants.Lunch +"";
+        //risposta += "\n" + Commands.RemoveMangiamo + " <tx>: to Remove a place where we can EAT " + Constants.Lunch +"";
         risposta += "\n" + Commands.AddRDiceCose + " <tx>: to Add New Smart Eclamation to " + Constants.RDiceCose +"";
         risposta += "\n" + Commands.RemoveRDiceCose + " <tx>: to Remove an Esclamation to " + Constants.RDiceCose +"";
         risposta += "\n" + Commands.AllBartek + " <tx>: to List all items in " + Constants.Question +"";
-        risposta += "\n" + Commands.AllMangiamo + " <tx>: to List all items in " + Constants.Lunch +"";
+        //risposta += "\n" + Commands.AllMangiamo + " <tx>: to List all items in " + Constants.Lunch +"";
         risposta += "\n" + Commands.AllRDiceCose + " <tx>: to List all items in " + Constants.RDiceCose +"";
         risposta += "\n" + Commands.Version + " the current version.";
         risposta += "\n" + Commands.Init + " WIP";
