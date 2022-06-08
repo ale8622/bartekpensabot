@@ -1,4 +1,4 @@
-module.exports.Commands = {
+module.exports.Commands_a = {
     Start : "/Start ",
     Init : /init/,
     Version :/Version/,
@@ -19,7 +19,7 @@ module.exports.Commands = {
     AddRDiceCose: /RDiceAdd /,
     RemoveRDiceCose: /RDiceRemove /,
    },
-   module.exports.CommandsFake = {
+   module.exports.Commands = {
     Start : "No sStart",
     Init : /No init/,
     Version : /No Version/,
