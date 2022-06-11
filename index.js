@@ -11,6 +11,9 @@ var done = 0;
 var today_global = new Date();
 var dayOfWeek_global  = today_global.getDay();
 
+var lastMangiamoCall = addMinutes(new Date('0001-01-01T00:00:00Z'), 0);
+var global_apranzo = null;
+
 async function readQuestions(msg) {
     try{
         console.log("readQuestions");
@@ -22,6 +25,12 @@ async function readQuestions(msg) {
         return null;
     }
  } 
+
+
+ function addMinutes(date, minutes) {
+    return new Date(date + minutes*60000);
+}
+
 
  async function readMessageForUser(msg) {
     return await redisClient.getInt(msg.chat.id, msg.from.username);
@@ -57,6 +66,8 @@ async function readQuestions(msg) {
 bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log("Start from " + msg.from.username);
     questions = await readQuestions(msg);
+    lastMangiamoCall = addMinutes(new Date('0001-01-01T00:00:00Z'), 0);
+    global_apranzo = null;
     await CheckAndSet(msg);
     await bot.sendPhoto(msg.chat.id , 
         Constants.Tektek[Math.floor(Math.random() * Constants.Tektek.length)] ,
@@ -153,11 +164,19 @@ bot.onText(Commands.RDiceCose, async (msg) => {
     }
 });
 
+
+async function getTodayAnswer(msg, oggi_str) {
+    lastMangiamoCall = addMinutes(Date.now() , 2 );
+    global_apranzo = await redisClient.getJson(msg.chat.id, Constants.mangiatoRedisKey + oggi_str); 
+    return  global_apranzo;
+}
+
+
 bot.onText(Commands.Mangiamo, async (msg) => {
     var oggi = new Date();
     var oggi_str = oggi.getFullYear().toString() + "-"  + oggi.getMonth().toString() + "-" + oggi.getDate().toString();
     //await setMessageForUser(msg);
-    if(questions && questions.pranzoSerio) {
+    if(!questions || !questions.pranzoSerio) {
         console.log("leggo da redis perche non ho trovato " + Commands.Mangiamo);
         questions = await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);    
     }
@@ -168,15 +187,20 @@ bot.onText(Commands.Mangiamo, async (msg) => {
         console.log("Cambiato Giorno " + oggi.getDate() + " " + dayOfWeek_global);
     }
 
-    var apranzo = await redisClient.getJson(msg.chat.id, Constants.mangiatoRedisKey + oggi_str); 
+
+    var last = lastMangiamoCall;
+    var ttl = addMinutes(Date.now(), 0);
+    var apranzo = ttl <= last && global_apranzo? 
+                    global_apranzo :
+                    await getTodayAnswer(msg, oggi_str);
+
 
     if(!apranzo) {
         if(questions && questions.pranzoSerio) {
 
             var elencoPranzo =  questions.pranzoSerio ? await utility.ElencaTuttiFiltratiPerOggiPesati(questions.pranzoSerio, oggi.getDay()) : questions.pranzo;
-            var dove  =utility.rispondi(elencoPranzo);
-
-            bot.sendMessage(msg.chat.id, Lunch_Answer + dove );
+            var dove  =utility.rispondi(elencoPranzo);;
+            bot.sendMessage(msg.chat.id, Constants.Lunch_Answer + dove );
             apranzo =  {"quando" :  oggi_str  , "dove": dove};
             await redisClient.setJsonWithTTL(msg.chat.id, 
                             Constants.mangiatoRedisKey + oggi_str, 
