@@ -1,10 +1,10 @@
 const { Constants } = require("./constants");
 const { Commands } = require("./commands");
 const redisClient = require("./redisClient")
-
+var dayOfWeek_global  = today_global.getDay();
 module.exports = {
     rispondi: function (lista){
-        if( this.giornoCambiato()== true ) console.log("cambiato Giorno " +  (new Date().toDateString()));
+        if( this.giornoCambiato(dayOfWeek_global)== true ) console.log("cambiato Giorno " +  (new Date().toDateString()));
         var isFriday = (new Date().getDay() === 5) ; 
         if(isFriday && done < friday.esclamazioni.length) {  
             return friday.esclamazioni[done++] 
@@ -59,6 +59,7 @@ module.exports = {
     giornoCambiato: function (dayOfWeek_global ){
         var dayOfWeek = new Date().getDay();
         if(dayOfWeek_global != dayOfWeek) {
+            dayOfWeek_global = dayOfWeek;
             return true;
         }
         return false;
