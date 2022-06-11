@@ -27,7 +27,7 @@ async function readQuestions(msg) {
     return await redisClient.getInt(msg.chat.id, msg.from.username);
  } 
 
- async function     setMessageForUser(msg) {
+ async function setMessageForUser(msg) {
     try{
         console.log("setMessageForUser");
         var num = await readMessageForUser(msg) ?? 0;
@@ -142,7 +142,7 @@ bot.onText(Commands.RDiceCose, async (msg) => {
 bot.onText(Commands.Mangiamo, async (msg) => {
     var oggi = new Date();
     var oggi_str = oggi.getFullYear().toString() + "-"  + oggi.getMonth().toString() + "-" + oggi.getDate().toString();
-    await setMessageForUser(msg);
+    //await setMessageForUser(msg);
     if(questions && questions.pranzo) {
         console.log(Commands.Mangiamo);
         await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);         
@@ -177,7 +177,7 @@ bot.onText(Commands.Mangiamo, async (msg) => {
 });
 
 bot.onText(Commands.Ics, async (msg) => {
-    await setMessageForUser(msg);
+    //await setMessageForUser(msg);
     ElencaTutti(msg, questions.ics, "ICS");    
 });
 
@@ -192,7 +192,7 @@ async function  ElencaTutti(msg, list, label) {
 
 
 bot.onText(Commands.Bartek, async (msg) => {
-    await setMessageForUser(msg);
+    //await setMessageForUser(msg);
     if(questions && questions.domandone) {
         bot.sendMessage(msg.chat.id, "Bartek si Domanda: \n" + utility.rispondi(questions.domandone));
     } else {
