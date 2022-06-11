@@ -1,6 +1,7 @@
 const { Constants } = require("./constants");
 const { Commands } = require("./commands");
-const redisClient = require("./redisClient")
+const redisClient = require("./redisClient");
+var today_global = new Date();
 var dayOfWeek_global  = today_global.getDay();
 module.exports = {
     rispondi: function (lista){
