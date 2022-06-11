@@ -39,7 +39,7 @@ async function readQuestions(msg) {
  } 
  
 
- async function CheckAndRead(msg){
+ async function CheckAndSet(msg){
     if(!questions) {
         questions = questions_bck;
         try{
@@ -51,22 +51,23 @@ async function readQuestions(msg) {
     } else {
         await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions));
     }
-    await bot.sendPhoto(msg.chat.id , 
-                        Constants.Tektek[Math.floor(Math.random() * Constants.Tektek.length)] ,
-                        {
-                            caption: Constants.WelcomeMessage ,
-                            reply_markup : {
-                                    keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose]], 
-                                force_reply : true 
-                            }
-                        }
-                        );
+    
 
  }
 bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log("Start from " + msg.from.username);
     questions = await readQuestions(msg);
-    await CheckAndRead();
+    await CheckAndSet(msg);
+    await bot.sendPhoto(msg.chat.id , 
+        Constants.Tektek[Math.floor(Math.random() * Constants.Tektek.length)] ,
+        {
+            caption: Constants.WelcomeMessage ,
+            reply_markup : {
+                    keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose]], 
+                force_reply : true 
+            }
+        }
+        );
 });
 
 
@@ -138,8 +139,16 @@ bot.onText(/^[\/]{1}ppp/, async (msg) => {
    
 bot.onText(Commands.RDiceCose, async (msg) => {
     if(questions && questions.RDiceCose) {
-        bot.sendMessage( msg.chat.id, "R. dice: " +  utility.rispondi(questions.RDiceCose));
+        bot.sendMessage( msg.chat.id, "R. dice: \n " +  utility.rispondi(questions.RDiceCose));
     } else {
+        console.log("leggo da redis perche non ho trovato " + Commands.RDiceCose);
+        questions=  await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);    
+        if(questions && questions.RDiceCose) {
+            bot.sendMessage(msg.chat.id,  "R. dice: \n" + utility.rispondi(questions.RDiceCose));
+        } else {
+            bot.sendMessage(msg.chat.id, Constants.Whats);
+        }
+
         bot.sendMessage(msg.chat.id, Constants.Whats);
     }
 });
@@ -149,7 +158,8 @@ bot.onText(Commands.Mangiamo, async (msg) => {
     var oggi_str = oggi.getFullYear().toString() + "-"  + oggi.getMonth().toString() + "-" + oggi.getDate().toString();
     //await setMessageForUser(msg);
     if(questions && questions.pranzoSerio) {
-        await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);         
+        console.log("leggo da redis perche non ho trovato " + Commands.Mangiamo);
+        questions = await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);    
     }
 
     if( utility.giornoCambiato(dayOfWeek_global )) {
@@ -194,14 +204,18 @@ async function  ElencaTutti(msg, list, label) {
 };
 
 
-
 bot.onText(Commands.Bartek, async (msg) => {
     //await setMessageForUser(msg);
     if(questions && questions.domandone) {
         bot.sendMessage(msg.chat.id, "Bartek si Domanda: \n" + utility.rispondi(questions.domandone));
     } else {
-
-        bot.sendMessage(msg.chat.id, Constants.Whats);
+        console.log("leggod da redi perche non ho trovato " + Commands.domandone);
+        questions = await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);    
+        if(questions && questions.domandone) {
+            bot.sendMessage(msg.chat.id, "Bartek si Domanda: \n" + utility.rispondi(questions.domandone));
+        } else {
+            bot.sendMessage(msg.chat.id, Constants.Whats);
+        }
     }
 });
 
