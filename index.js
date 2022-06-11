@@ -38,9 +38,8 @@ async function readQuestions(msg) {
     }
  } 
  
-bot.onText(/^[\/]{1}Start/, async (msg) => {
-    console.log("Start from " + msg.from.username);
-    questions = await readQuestions(msg);
+
+ function CheckAndRead(){
     if(!questions) {
         questions = questions_bck;
         try{
@@ -62,6 +61,12 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
                             }
                         }
                         );
+
+ }
+bot.onText(/^[\/]{1}Start/, async (msg) => {
+    console.log("Start from " + msg.from.username);
+    questions = await readQuestions(msg);
+    CheckAndRead();
 });
 
 
@@ -195,6 +200,7 @@ bot.onText(Commands.Bartek, async (msg) => {
     if(questions && questions.domandone) {
         bot.sendMessage(msg.chat.id, "Bartek si Domanda: \n" + utility.rispondi(questions.domandone));
     } else {
+
         bot.sendMessage(msg.chat.id, Constants.Whats);
     }
 });
