@@ -139,12 +139,12 @@ bot.onText(/^[\/]{1}ppp/, async (msg) => {
    
 bot.onText(Commands.RDiceCose, async (msg) => {
     if(questions && questions.RDiceCose) {
-        bot.sendMessage( msg.chat.id, "R. dice: \n " +  utility.rispondi(questions.RDiceCose));
+        bot.sendMessage( msg.chat.id, Constants.RDiceCose_Answer +  utility.rispondi(questions.RDiceCose));
     } else {
         console.log("leggo da redis perche non ho trovato " + Commands.RDiceCose);
         questions=  await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);    
         if(questions && questions.RDiceCose) {
-            bot.sendMessage(msg.chat.id,  "R. dice: \n" + utility.rispondi(questions.RDiceCose));
+            bot.sendMessage(msg.chat.id, Constants.RDiceCose_Answer + utility.rispondi(questions.RDiceCose));
         } else {
             bot.sendMessage(msg.chat.id, Constants.Whats);
         }
@@ -176,7 +176,7 @@ bot.onText(Commands.Mangiamo, async (msg) => {
             var elencoPranzo =  questions.pranzoSerio ? await utility.ElencaTuttiFiltratiPerOggiPesati(questions.pranzoSerio, oggi.getDay()) : questions.pranzo;
             var dove  =utility.rispondi(elencoPranzo);
 
-            bot.sendMessage(msg.chat.id, "Oggi Mangerai da \n" + dove );
+            bot.sendMessage(msg.chat.id, Lunch_Answer + dove );
             apranzo =  {"quando" :  oggi_str  , "dove": dove};
             await redisClient.setJsonWithTTL(msg.chat.id, 
                             Constants.mangiatoRedisKey + oggi_str, 
