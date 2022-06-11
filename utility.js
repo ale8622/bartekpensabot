@@ -4,7 +4,7 @@ const redisClient = require("./redisClient")
 
 module.exports = {
     rispondi: function (lista){
-        if( this.giornoCambiato()== true console.log("cambiato Giorno " +  (new Date().toDateString()));
+        if( this.giornoCambiato()== true ) console.log("cambiato Giorno " +  (new Date().toDateString()));
         var isFriday = (new Date().getDay() === 5) ; 
         if(isFriday && done < friday.esclamazioni.length) {  
             return friday.esclamazioni[done++] 
