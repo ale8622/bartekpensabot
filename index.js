@@ -143,8 +143,7 @@ bot.onText(Commands.Mangiamo, async (msg) => {
     var oggi = new Date();
     var oggi_str = oggi.getFullYear().toString() + "-"  + oggi.getMonth().toString() + "-" + oggi.getDate().toString();
     //await setMessageForUser(msg);
-    if(questions && questions.pranzo) {
-        console.log(Commands.Mangiamo);
+    if(questions && questions.pranzoSerio) {
         await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);         
     }
 
@@ -157,9 +156,9 @@ bot.onText(Commands.Mangiamo, async (msg) => {
     var apranzo = await redisClient.getJson(msg.chat.id, Constants.mangiatoRedisKey + oggi_str); 
 
     if(!apranzo) {
-        if(questions && questions.pranzo) {
+        if(questions && questions.pranzoSerio) {
 
-            var elencoPranzo =  questions.pranzoSerio ? await utility.ElencaTuttiFiltratiPerOggiPesati(questions_bck.pranzoSerio, oggi.getDay()) : questions.pranzo;
+            var elencoPranzo =  questions.pranzoSerio ? await utility.ElencaTuttiFiltratiPerOggiPesati(questions.pranzoSerio, oggi.getDay()) : questions.pranzo;
             var dove  =utility.rispondi(elencoPranzo);
 
             bot.sendMessage(msg.chat.id, "Oggi Mangerai da \n" + dove );
