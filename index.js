@@ -39,11 +39,11 @@ async function readQuestions(msg) {
  } 
  
 
- function CheckAndRead(){
+ async function CheckAndRead(msg){
     if(!questions) {
         questions = questions_bck;
         try{
-        await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions_bck));
+            await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions_bck));
         } catch (ex) {
             console.log("error 1");
             console.log(ex);
@@ -66,7 +66,7 @@ async function readQuestions(msg) {
 bot.onText(/^[\/]{1}Start/, async (msg) => {
     console.log("Start from " + msg.from.username);
     questions = await readQuestions(msg);
-    CheckAndRead();
+    await CheckAndRead();
 });
 
 
