@@ -69,6 +69,7 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     lastMangiamoCall = addMinutes(new Date('0001-01-01T00:00:00Z'), 0);
     global_apranzo = null;
     await CheckAndSet(msg);
+    console.log(msg.chat.id);
     if(msg.chat.id == 706101238) {
         await bot.sendPhoto(msg.chat.id , 
             Constants.Tektek[Math.floor(Math.random() * Constants.Tektek.length)] ,
