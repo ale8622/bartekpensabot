@@ -70,7 +70,7 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     global_apranzo = null;
     await CheckAndSet(msg);
     console.log(msg.chat.id);
-    if(msg.chat.id == 706101238) {
+    if(msg.chat.id == -706101238) {
         await bot.sendPhoto(msg.chat.id , 
             Constants.Tektek[Math.floor(Math.random() * Constants.Tektek.length)] ,
             {
