@@ -69,16 +69,23 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     lastMangiamoCall = addMinutes(new Date('0001-01-01T00:00:00Z'), 0);
     global_apranzo = null;
     await CheckAndSet(msg);
-    await bot.sendPhoto(msg.chat.id , 
-        Constants.Tektek[Math.floor(Math.random() * Constants.Tektek.length)] ,
-        {
-            caption: Constants.WelcomeMessage ,
-            reply_markup : {
-                    keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose]], 
-                force_reply : true 
+    if(msg.chat.id =="706101238") {
+        await bot.sendPhoto(msg.chat.id , 
+            Constants.Tektek[Math.floor(Math.random() * Constants.Tektek.length)] ,
+            {
+                caption: Constants.WelcomeMessage ,
+                reply_markup : {
+                        keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose]], 
+                    force_reply : true 
+                }
             }
-        }
-        );
+            );
+    } else {
+
+        bot.sendMessage(msg.chat.id, Constants.WelcomeMessage);
+            
+    }
+    
 });
 
 
