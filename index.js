@@ -145,7 +145,7 @@ bot.onText(Commands.AllMangiamo, async (msg) => {
 });
 
 bot.onText(Commands.IcsAll, async (msg) => { 
-    ElencaTutti(msg, questions.pranzo , "Tutte le ICS: n/");
+    ElencaTutti(msg, questions.ics , "Tutte le ICS: n/");
 });
 bot.onText(Commands.AllBartek, async (msg) => { 
     ElencaTutti(msg, questions.domandone, "DOMANDONI DI BARTEK");
