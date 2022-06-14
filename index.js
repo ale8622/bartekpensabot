@@ -184,7 +184,10 @@ bot.onText(Commands.Dio, async (msg) => {
                 }
                 );
         }
+    } else {
+        console.log("Dio" + msg.chat.id )
     }
+
 });
 bot.onText(/^[\/]{1}ppp/, async (msg) => {
     var wd = new Date().getDay();
