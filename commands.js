@@ -20,6 +20,7 @@ module.exports.Commands = process.env.COMMAND_VERSION =="FAKE" ?
     AllRDiceCose: /no RDiceAll/,
     AddRDiceCose: /no RDiceAdd /,
     RemoveRDiceCose: /no RDiceRemove /,
+    Dio: "%Dio%"
    } :
    {
     Start : "/Start ",
@@ -42,4 +43,5 @@ module.exports.Commands = process.env.COMMAND_VERSION =="FAKE" ?
     AllRDiceCose: /RDiceAll/,
     AddRDiceCose: /RDiceAdd /,
     RemoveRDiceCose: /RDiceRemove /,
+    Dio: /Dio/
    };

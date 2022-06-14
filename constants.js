@@ -1,7 +1,7 @@
 const emoji = require("node-emoji");
 
 module.exports.Constants = {
-    Version: "0.8.3 - Cache for MangiatoOggi.",
+    Version: "0.9.0 - Dai che è Dio",
     WelcomeMessage : "Cosa si starà chiedendo Bartek oggi?",
     Question : emoji.get('question')+" Domandati"+emoji.get('question'),
     Lunch :emoji.get('spaghetti') +" Mangiamo"+emoji.get('question'),
@@ -14,6 +14,8 @@ module.exports.Constants = {
     Whats: "Cosa?",
     questionsRedisKey : "questions",
     mangiatoRedisKey : "doveMangiare_",
-    Tektek: ["./images/MimmoTek.jpg", "./images/SashaTek.jpg", "./images/MerdaTek.jpg", "./images/FagigioTek.jpg", "./images/IoTek.jpg"]
+    Tektek: ["./images/MimmoTek.jpg", "./images/SashaTek.jpg", "./images/MerdaTek.jpg", "./images/FagigioTek.jpg", "./images/IoTek.jpg"],
+    Giorni: ["[animale]DIO","dai che è LuneDio!", "dai che è MarteDio!", "dai che è MercoleDio!", "dai che è GioveDio!","dai che è VenerDio!", "CazzoFai? è sabato!", "COSA???"]
+
 
 }

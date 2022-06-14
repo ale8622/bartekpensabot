@@ -6,6 +6,7 @@ const { Commands } = require("./commands");
 const questions_bck = require('./questions.json');
 const TelegramBot =require('node-telegram-bot-api');
 const bot = new TelegramBot(process.env.BOT_API_KEY, {polling:true});
+const fs = require('fs');
 var questions = "";
 var done = 0;
 var today_global = new Date();
@@ -149,6 +150,41 @@ bot.onText(Commands.IcsAll, async (msg) => {
 });
 bot.onText(Commands.AllBartek, async (msg) => { 
     ElencaTutti(msg, questions.domandone, "DOMANDONI DI BARTEK");
+});
+
+bot.onText(Commands.Dio, async (msg) => { 
+
+    if(msg.chat.id == -706101238 || 
+        msg.chat.id == 1057386387) 
+        {
+
+        var folder ='dioImages/';
+        var files = fs.readdirSync(folder);
+        var filename = folder + files[Math.floor(Math.random() * files.length)];
+        if(filename.endsWith("mp4")) {
+        await bot.sendVideo(msg.chat.id , 
+            filename,
+            {
+                caption: Constants.Giorni[new Date().getDay()] ,
+                reply_markup : {
+                        keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose]], 
+                    force_reply : true 
+                }
+            }
+            );
+        } else {
+            await bot.sendPhoto(msg.chat.id , 
+                filename ,
+                {
+                    caption: Constants.Giorni[new Date().getDay()] ,
+                    reply_markup : {
+                            keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose]], 
+                        force_reply : true 
+                    }
+                }
+                );
+        }
+    }
 });
 bot.onText(/^[\/]{1}ppp/, async (msg) => {
     var wd = new Date().getDay();
