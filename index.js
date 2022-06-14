@@ -144,6 +144,9 @@ bot.onText(Commands.AllMangiamo, async (msg) => {
     ElencaTutti(msg, questions.pranzo , "POSTI ANCORA NON ICS");
 });
 
+bot.onText(Commands.IcsAll, async (msg) => { 
+    ElencaTutti(msg, questions.pranzo , "Tutte le ICS: n/");
+});
 bot.onText(Commands.AllBartek, async (msg) => { 
     ElencaTutti(msg, questions.domandone, "DOMANDONI DI BARTEK");
 });
@@ -224,7 +227,22 @@ bot.onText(Commands.Mangiamo, async (msg) => {
 
 bot.onText(Commands.Ics, async (msg) => {
     //await setMessageForUser(msg);
-    ElencaTutti(msg, questions.ics, "ICS");    
+    //ElencaTutti(msg, questions.ics, "ICS");    
+
+    if(questions && questions.ics) {
+        bot.sendMessage( msg.chat.id, Constants.RDiceCose_Answer +  utility.rispondi(questions.ics));
+    } else {
+        console.log("leggo da redis perche non ho trovato " + Commands.ics);
+        questions=  await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);    
+        if(questions && questions.ics) {
+            bot.sendMessage(msg.chat.id, Constants.RDiceCose_Answer + utility.rispondi(questions.ics));
+        } else {
+            bot.sendMessage(msg.chat.id, Constants.Whats);
+        }
+
+        bot.sendMessage(msg.chat.id, Constants.Whats);
+    }
+
 });
 
 async function  ElencaTutti(msg, list, label) {
@@ -269,8 +287,8 @@ async function  aggiugiSuRedis(mode, msg, arrayname){
         }
     }
     else {
-        bot.sendMessage(msg.chat.id, "Problemi com " + mode);
-        console.log("Problemi com " + mode);
+        bot.sendMessage(msg.chat.id, "Problemi con " + mode);
+        console.log("Problemi con " + mode);
         return false;
     }
 };
