@@ -185,7 +185,7 @@ async function getTodayAnswer(msg, oggi_str) {
 
 bot.onText(Commands.Mangiamo, async (msg) => {
     var oggi = new Date();
-    var oggi_str = oggi.getFullYear().toString() + "-"  + oggi.getMonth().toString() + "-" + oggi.getDate().toString();
+    var oggi_str = oggi.getFullYear().toString() + "-"  + (oggi.getMonth()+1).toString() + "-" + oggi.getDate().toString();
     //await setMessageForUser(msg);
     if(!questions || !questions.pranzoSerio) {
         console.log("leggo da redis perche non ho trovato " + Commands.Mangiamo);
@@ -230,12 +230,12 @@ bot.onText(Commands.Ics, async (msg) => {
     //ElencaTutti(msg, questions.ics, "ICS");    
 
     if(questions && questions.ics) {
-        bot.sendMessage( msg.chat.id, Constants.RDiceCose_Answer +  utility.rispondi(questions.ics));
+        bot.sendMessage( msg.chat.id, Constants.Ics_Answer +  utility.rispondi(questions.ics));
     } else {
         console.log("leggo da redis perche non ho trovato " + Commands.ics);
         questions=  await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);    
         if(questions && questions.ics) {
-            bot.sendMessage(msg.chat.id, Constants.RDiceCose_Answer + utility.rispondi(questions.ics));
+            bot.sendMessage(msg.chat.id, Constants.Ics_Answer + utility.rispondi(questions.ics));
         } else {
             bot.sendMessage(msg.chat.id, Constants.Whats);
         }

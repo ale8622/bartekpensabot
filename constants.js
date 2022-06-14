@@ -6,6 +6,7 @@ module.exports.Constants = {
     Question : emoji.get('question')+" Domandati"+emoji.get('question'),
     Lunch :emoji.get('spaghetti') +" Mangiamo"+emoji.get('question'),
     Ics : emoji.get('x')+" ics",
+    Ics_Answer : "La tua ICS: \n",
     RDiceCose : emoji.get('x')+" RDicecose ",
     RDiceCose_Answer : "R. dice: \n",
     Lunch_Answer : "Oggi Mangerai da \n",
