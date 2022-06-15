@@ -172,6 +172,18 @@ bot.onText(Commands.Dio, async (msg) => {
                 }
             }
             );
+        } else if(filename.endsWith("mp3")) {
+
+            await bot.sendAudio(msg.chat.id , 
+                filename ,
+                {
+                    caption: Constants.Giorni[new Date().getDay()] ,
+                    reply_markup : {
+                            keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose]], 
+                        force_reply : true 
+                    }
+                }
+                );
         } else {
             await bot.sendPhoto(msg.chat.id , 
                 filename ,
