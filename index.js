@@ -174,7 +174,7 @@ bot.onText(Commands.Dio, async (msg) => {
             );
         } else if(filename.endsWith("mp3")) {
 
-            await bot.sendAudio(msg.chat.id , 
+            await bot.sendVoice(msg.chat.id , 
                 filename ,
                 {
                     caption: Constants.Giorni[new Date().getDay()] ,
