@@ -8,7 +8,7 @@ const mangiamos_bck = require('./mangiare.json');
 
 const TelegramBot =require('node-telegram-bot-api');
 const bot = new TelegramBot(process.env.BOT_API_KEY, {polling:true});
-const fs = require('fs');
+
 var questions = "";
 var mangiamos = "";
 var today_global = new Date();
@@ -81,6 +81,7 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
     questions = await readQuestions(msg);
     lastMangiamoCall = addMinutes(new Date('0001-01-01T00:00:00Z'), 0);
     global_apranzo = null;
+    await utility.initFilesDio();
     await CheckAndSet(msg);
     console.log(msg.chat.id);
     if(msg.chat.id == -706101238) {
@@ -163,50 +164,55 @@ bot.onText(Commands.AllBartek, async (msg) => {
     ElencaTutti(msg, questions.domandone, "DOMANDONI DI BARTEK");
 });
 
+
 bot.onText(Commands.Dio, async (msg) => { 
 
     if(msg.chat.id == -706101238 || 
         msg.chat.id == 1057386387) 
         {
 
-        var folder ='dioImages/';
-        var files = fs.readdirSync(folder);
-        var filename = folder + files[Math.floor(Math.random() * files.length)];
-        if(filename.endsWith("mp4")) {
-        await bot.sendVideo(msg.chat.id , 
-            filename,
-            {
-                caption: Constants.Giorni[new Date().getDay()] ,
-                reply_markup : {
-                        keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose]], 
-                    force_reply : true 
-                }
-            }
-            );
-        } else if(filename.endsWith("mp3")) {
+        //var folder ='dioImages/';
+        var folder ='dios';
+        var files =  await utility.getFilesDio(msg.chat.id.toString() , folder);
+        var tempfiles =  files.dios?.filter(x=> x.Giorni.includes(new Date().getDay()));
+        var file = tempfiles?tempfiles[Math.floor(Math.random() * tempfiles.length) ] : null;
 
+        if(file && file.Extesnsion=="mp4") {
+            await bot.sendVideo(msg.chat.id , 
+                file.FileName,
+                {
+                    caption: file.Caption + "\n" + Constants.Giorni[new Date().getDay()] ,
+                    // reply_markup : {
+                    //         keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose]], 
+                    //     force_reply : true 
+                    // }
+                }
+                );
+        } else if(file && file.Extesnsion=="mp3") {
             await bot.sendVoice(msg.chat.id , 
-                filename ,
+                file.FileName,
                 {
-                    caption: Constants.Giorni[new Date().getDay()] ,
-                    reply_markup : {
-                            keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose]], 
-                        force_reply : true 
-                    }
+                    caption: file.Caption + "\n" + Constants.Giorni[new Date().getDay()] ,
+                    // reply_markup : {
+                    //         keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose]], 
+                    //     force_reply : true 
+                    // }
                 }
                 );
-        } else {
+        } else if(file) {
             await bot.sendPhoto(msg.chat.id , 
-                filename ,
+                file.FileName,
                 {
-                    caption: Constants.Giorni[new Date().getDay()] ,
-                    reply_markup : {
-                            keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose]], 
-                        force_reply : true 
-                    }
+                    caption: file.Caption + "\n" + Constants.Giorni[new Date().getDay()] ,
+                    // reply_markup : {
+                    //         keyboard : [[Constants.Question],[Constants.Lunch],[Constants.Ics],[Constants.RDiceCose]], 
+                    //     force_reply : true 
+                    // }
                 }
                 );
-        }
+         } else {
+                await bot.sendMessage(msg.chat.id , Constants.Whats);
+            }
     } else {
         console.log("Dio" + msg.chat.id )
     }

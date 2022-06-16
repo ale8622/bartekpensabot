@@ -1,8 +1,13 @@
 const { Constants } = require("./constants");
 const { Commands } = require("./commands");
 const redisClient = require("./redisClient");
+const fs = require('fs');
+
 var today_global = new Date();
 var dayOfWeek_global  = today_global.getDay();
+
+var files = null;
+
 module.exports = {
     rispondi: function (lista){
         if( this.giornoCambiato(dayOfWeek_global)== true ) console.log("cambiato Giorno " +  (new Date().toDateString()));
@@ -70,8 +75,17 @@ module.exports = {
     
     readMessageForUser: async function (msg) {
         return await redisClient.getInt(msg.chat.id, msg.from.username);
-    }
+    },
 
+    getFilesDio: async function (ChatId, folder){
+        if (files) return files;
+        return await redisClient.getJson( ChatId, folder);
+
+    },
+    initFilesDio: async function (ChatId, folder)
+    {
+         files = null;
+    }
 
 }
 
