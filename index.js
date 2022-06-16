@@ -177,7 +177,9 @@ bot.onText(Commands.Dio, async (msg) => {
         var tempfiles =  files.dios?.filter(x=> x.Giorni.includes(new Date().getDay()));
         var file = tempfiles?tempfiles[Math.floor(Math.random() * tempfiles.length) ] : null;
 
+       
         if(file && file.Extesnsion=="mp4") {
+            console.log(file.FileName);
             await bot.sendVideo(msg.chat.id , 
                 file.FileName,
                 {
@@ -189,6 +191,7 @@ bot.onText(Commands.Dio, async (msg) => {
                 }
                 );
         } else if(file && file.Extesnsion=="mp3") {
+            console.log(file.FileName);
             await bot.sendVoice(msg.chat.id , 
                 file.FileName,
                 {
@@ -200,6 +203,7 @@ bot.onText(Commands.Dio, async (msg) => {
                 }
                 );
         } else if(file) {
+            console.log(file.FileName);
             await bot.sendPhoto(msg.chat.id , 
                 file.FileName,
                 {
@@ -210,9 +214,10 @@ bot.onText(Commands.Dio, async (msg) => {
                     // }
                 }
                 );
-         } else {
-                await bot.sendMessage(msg.chat.id , Constants.Whats);
-            }
+        } else {
+            console.log("Message");
+            await bot.sendMessage(msg.chat.id , Constants.Whats);
+        }
     } else {
         console.log("Dio" + msg.chat.id )
     }
