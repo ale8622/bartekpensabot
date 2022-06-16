@@ -4,11 +4,13 @@ const utility = require("./utility")
 const { Constants } = require("./constants");
 const { Commands } = require("./commands");
 const questions_bck = require('./questions.json');
+const mangiamos_bck = require('./mangiare.json');
+
 const TelegramBot =require('node-telegram-bot-api');
 const bot = new TelegramBot(process.env.BOT_API_KEY, {polling:true});
 const fs = require('fs');
 var questions = "";
-var done = 0;
+var mangiamos = "";
 var today_global = new Date();
 var dayOfWeek_global  = today_global.getDay();
 
@@ -61,7 +63,17 @@ async function readQuestions(msg) {
     } else {
         await redisClient.setJson(msg.chat.id, Constants.questionsRedisKey, JSON.stringify(questions));
     }
-    
+    if(!mangiamos) {
+        try{
+            await redisClient.setJson(msg.chat.id, Constants.mangiamosRedisKey, JSON.stringify(mangiamos_bck));
+        } catch (ex) {
+            mangiamos = mangiamos_bck;
+            console.log("error 2");
+            console.log(ex);
+        }
+    } else {
+        await redisClient.setJson(msg.chat.id, Constants.mangiamosRedisKey, JSON.stringify(mangiamos));
+    }
 
  }
 bot.onText(/^[\/]{1}Start/, async (msg) => {
@@ -92,7 +104,6 @@ bot.onText(/^[\/]{1}Start/, async (msg) => {
 
 
 bot.onText(Commands.Init, async (msg) => {
-    done = 0;
     questions = await readQuestions(msg);
     console.log("Init from " + msg.from.username);
 });
@@ -142,7 +153,7 @@ bot.onText(Commands.AllRDiceCose, async (msg) => {
 });
 
 bot.onText(Commands.AllMangiamo, async (msg) => { 
-    ElencaTutti(msg, questions.pranzo , "POSTI ANCORA NON ICS");
+    ElencaTutti(msg, mangiamos.pranzoSerio , "POSTI ANCORA NON ICS");
 });
 
 bot.onText(Commands.IcsAll, async (msg) => { 
@@ -201,9 +212,10 @@ bot.onText(Commands.Dio, async (msg) => {
     }
 
 });
+
 bot.onText(/^[\/]{1}ppp/, async (msg) => {
     var wd = new Date().getDay();
-    var a = await utility.ElencaTuttiFiltratiPerOggiPesati(questions.pranzoSerio, wd);
+    var a = await utility.ElencaTuttiFiltratiPerOggiPesati(mangiamos.pranzoSerio, wd);
     var dove  =utility.rispondi(a);
     bot.sendMessage(msg.chat.id, dove);
 
@@ -228,8 +240,10 @@ bot.onText(Commands.RDiceCose, async (msg) => {
 
 
 async function getTodayAnswer(msg, oggi_str) {
-    lastMangiamoCall = addMinutes(Date.now() , 2 );
+    var minute = 2;
+    lastMangiamoCall = addMinutes(Date.now() , minute );
     global_apranzo = await redisClient.getJson(msg.chat.id, Constants.mangiatoRedisKey + oggi_str); 
+    console.log("Terro in cache da ora per " + minute.toString() + " la risposta de Mangiamo " + lastMangiamoCall);
     return  global_apranzo;
 }
 
@@ -238,14 +252,15 @@ bot.onText(Commands.Mangiamo, async (msg) => {
     var oggi = new Date();
     var oggi_str = oggi.getFullYear().toString() + "-"  + (oggi.getMonth()+1).toString() + "-" + oggi.getDate().toString();
     //await setMessageForUser(msg);
-    if(!questions || !questions.pranzoSerio) {
-        console.log("leggo da redis perche non ho trovato " + Commands.Mangiamo);
-        questions = await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);    
+    if(!mangiamos || !mangiamos.pranzoSerio) {
+        console.log("ri-leggo da redis perche non ho trovato " + Commands.Mangiamo);
+
+        mangiamos = await redisClient.getJsonQuestions(msg.chat.id, Constants.mangiamosRedisKey);    
+
     }
 
     if( utility.giornoCambiato(dayOfWeek_global )) {
         dayOfWeek_global = oggi.getDay();
-        done = 0;
         console.log("Cambiato Giorno " + oggi.getDate() + " " + dayOfWeek_global);
     }
 
@@ -256,11 +271,10 @@ bot.onText(Commands.Mangiamo, async (msg) => {
                     global_apranzo :
                     await getTodayAnswer(msg, oggi_str);
 
-
     if(!apranzo) {
-        if(questions && questions.pranzoSerio) {
+        if(mangiamos && mangiamos.pranzoSerio) {
 
-            var elencoPranzo =  questions.pranzoSerio ? await utility.ElencaTuttiFiltratiPerOggiPesati(questions.pranzoSerio, oggi.getDay()) : questions.pranzo;
+            var elencoPranzo =  mangiamos.pranzoSerio ? await utility.ElencaTuttiFiltratiPerOggiPesati(mangiamos.pranzoSerio, oggi.getDay()) : mangiamos.pranzoSerio;
             var dove  =utility.rispondi(elencoPranzo);;
             bot.sendMessage(msg.chat.id, Constants.Lunch_Answer + dove );
             apranzo =  {"quando" :  oggi_str  , "dove": dove};
@@ -268,6 +282,15 @@ bot.onText(Commands.Mangiamo, async (msg) => {
                             Constants.mangiatoRedisKey + oggi_str, 
                             JSON.stringify(apranzo),
                             60 * 60 * 24); 
+
+            mangiamos.pranzoSerio.map(x=> x =  x.nome == dove? scalaPeso(x) : x );
+            mangiamos.pranzoSerio.map(x=> x =  x.pesoAttuale == 0  && x.nome != dove? x.pesoAttuale = x.peso  : x );
+
+            await redisClient.setJson(msg.chat.id, 
+                Constants.mangiamosRedisKey , 
+                JSON.stringify(mangiamos)); 
+
+
         } else {
             bot.sendMessage(msg.chat.id, Constants.Whats);
        }
@@ -275,6 +298,17 @@ bot.onText(Commands.Mangiamo, async (msg) => {
         bot.sendMessage(msg.chat.id, msg.from.first_name + ", per Oggi, "+ apranzo.quando +", ho già risposto che dovresti andare da " + apranzo.dove);
     }
 });
+
+function scalaPeso (locale) {
+    var return_val = locale;
+    if (locale.pesoAttuale == 0) {
+        return_val.pesoAttuale = locale.peso;
+
+    } else {
+        return_val.pesoAttuale = return_val.pesoAttuale - 1;
+    }
+    return return_val;
+}
 
 bot.onText(Commands.Ics, async (msg) => {
     //await setMessageForUser(msg);

@@ -26,7 +26,7 @@ module.exports = {
         if(inlist) {
             inlist.filter(x=> x.giorni.includes(wd))
                 .map(x=> {
-                        let pesati = Array(x.peso).fill(x.nome);
+                        let pesati = Array(x.pesoAttuale).fill(x.nome);
                         pesati.map(c=> outList.push(c));                
                     });
             return outList;
