@@ -3,7 +3,7 @@ const { Commands } = require("./commands");
 const redisClient = require("./redisClient");
 const friday = require('./friday.json');
 const fs = require('fs');
-
+var done = 0;
 var today_global = new Date();
 var dayOfWeek_global  = today_global.getDay();
 
