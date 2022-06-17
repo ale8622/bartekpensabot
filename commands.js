@@ -23,7 +23,7 @@ module.exports.Commands = process.env.COMMAND_VERSION =="FAKE" ?
     Dio: "%Dio%"
    } :
    {
-    Start : "/Start ",
+    Start : /Start/,
     Init : /init/,
     Version :/Version/,
     Help : /Help/,

@@ -76,7 +76,8 @@ async function readQuestions(msg) {
     }
 
  }
-bot.onText(/^[\/]{1}Start/, async (msg) => {
+//bot.onText(/^[\/]{1}Start/, async (msg) => {
+    bot.onText(Commands.Start, async (msg) => {
     console.log("Start from " + msg.from.username);
     questions = await readQuestions(msg);
     lastMangiamoCall = addMinutes(new Date('0001-01-01T00:00:00Z'), 0);
