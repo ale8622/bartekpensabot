@@ -21,6 +21,10 @@ module.exports = {
         }
     },
 
+    rispondiMangiamo: function (lista){
+        return lista[Math.floor(Math.random() * lista.length)]
+    },
+
     delay: function (time) {
         return new Promise(resolve => setTimeout(resolve, time));
     },

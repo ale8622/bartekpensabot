@@ -183,7 +183,7 @@ bot.onText(Commands.Dio, async (msg) => {
             {
                 console.log((msg.chat.id.toString() , folder));
             }
-             
+
         var tempfiles =  files_tmp.dios?.filter(x=> x.Giorni.includes(new Date().getDay()));
         var file = tempfiles?tempfiles[Math.floor(Math.random() * tempfiles.length) ] : null;
 
@@ -296,7 +296,7 @@ bot.onText(Commands.Mangiamo, async (msg) => {
         if(mangiamos && mangiamos.pranzoSerio) {
 
             var elencoPranzo =  mangiamos.pranzoSerio ? await utility.ElencaTuttiFiltratiPerOggiPesati(mangiamos.pranzoSerio, oggi.getDay()) : mangiamos.pranzoSerio;
-            var dove  =utility.rispondi(elencoPranzo);;
+            var dove  = utility.rispondiMangiamo(elencoPranzo);;
             bot.sendMessage(msg.chat.id, Constants.Lunch_Answer + dove );
             apranzo =  {"quando" :  oggi_str  , "dove": dove};
             await redisClient.setJsonWithTTL(msg.chat.id, 
