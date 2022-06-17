@@ -1,6 +1,7 @@
 const { Constants } = require("./constants");
 const { Commands } = require("./commands");
 const redisClient = require("./redisClient");
+const friday = require('./friday.json');
 const fs = require('fs');
 
 var today_global = new Date();
