@@ -174,8 +174,17 @@ bot.onText(Commands.Dio, async (msg) => {
 
         //var folder ='dioImages/';
         var folder ='dios';
-        var files =  await utility.getFilesDio(msg.chat.id.toString() , folder);
-        var tempfiles =  files.dios?.filter(x=> x.Giorni.includes(new Date().getDay()));
+        var files_tmp =  await utility.getFilesDio(msg.chat.id.toString() , folder);
+        if(files_tmp) 
+            {
+                console.log("OK files");
+            } 
+            else
+            {
+                console.log((msg.chat.id.toString() , folder));
+            }
+             
+        var tempfiles =  files_tmp.dios?.filter(x=> x.Giorni.includes(new Date().getDay()));
         var file = tempfiles?tempfiles[Math.floor(Math.random() * tempfiles.length) ] : null;
 
        
