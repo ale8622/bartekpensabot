@@ -329,7 +329,7 @@ bot.onText(Commands.Ics, async (msg) => {
     if(questions && questions.ics) {
         bot.sendMessage( msg.chat.id, Constants.Ics_Answer +  utility.rispondi(questions.ics));
     } else {
-        console.log("leggo da redis perche non ho trovato " + Commands.ics);
+        console.log("leggo da redis perche non ho trovato " + Commands.Ics);
         questions=  await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);    
         if(questions && questions.ics) {
             bot.sendMessage(msg.chat.id, Constants.Ics_Answer + utility.rispondi(questions.ics));
