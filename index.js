@@ -356,7 +356,7 @@ bot.onText(Commands.Bartek, async (msg) => {
     if(questions && questions.domandone) {
         bot.sendMessage(msg.chat.id, "Bartek si Domanda: \n" + utility.rispondi(questions.domandone));
     } else {
-        console.log("leggod da redi perche non ho trovato " + Commands.domandone);
+        console.log("leggod da redi perche non ho trovato " + questions.domandone);
         questions = await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);    
         if(questions && questions.domandone) {
             bot.sendMessage(msg.chat.id, "Bartek si Domanda: \n" + utility.rispondi(questions.domandone));
