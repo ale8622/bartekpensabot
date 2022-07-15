@@ -13,7 +13,7 @@
     "jest": "^28.1.0",
     "node-emoji": "^1.11.0",
     "node-telegram-bot-api": "^0.57.0",
-    "redis": "^4.1.0"
+    "redis": "^4.2.0"
   },
   "scripts": {
     "start": "node index.js",

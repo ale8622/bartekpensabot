@@ -1,6 +1,7 @@
 module.exports.Commands = process.env.COMMAND_VERSION =="FAKE" ? 
+
 {
-    Start : "No sStart",
+    Start : /NosStart/,
     Init : /no init/,
     Version :/no Version/,
     Help : /no Help/,
@@ -20,7 +21,7 @@ module.exports.Commands = process.env.COMMAND_VERSION =="FAKE" ?
     AllRDiceCose: /no RDiceAll/,
     AddRDiceCose: /no RDiceAdd /,
     RemoveRDiceCose: /no RDiceRemove /,
-    Dio: "%Dio%"
+    Dio: /DiOpork/
    } :
    {
     Start : /Start/,

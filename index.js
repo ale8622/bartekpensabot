@@ -76,8 +76,9 @@ async function readQuestions(msg) {
     }
 
  }
+
 //bot.onText(/^[\/]{1}Start/, async (msg) => {
-    bot.onText(Commands.Start, async (msg) => {
+bot.onText(Commands.Start, async (msg) => {
     console.log("Start from " + msg.from.username);
     questions = await readQuestions(msg);
     lastMangiamoCall = addMinutes(new Date('0001-01-01T00:00:00Z'), 0);
@@ -85,7 +86,7 @@ async function readQuestions(msg) {
     await utility.initFilesDio();
     await CheckAndSet(msg);
     console.log(msg.chat.id);
-    if(msg.chat.id == -706101238) {
+    if(msg.chat.id == -706101238 || msg.chat.id == 1057386387) {
         await bot.sendPhoto(msg.chat.id , 
             Constants.Tektek[Math.floor(Math.random() * Constants.Tektek.length)] ,
             {
