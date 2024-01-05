@@ -1,0 +1,151 @@
+{
+	"pranzoSerio": [
+		{
+			"nome": "Baretto",
+			"giorni": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7
+			],
+			"peso": 5,
+			"ban": 0
+		},
+		{
+			"nome": "Roselli",
+			"giorni": [
+				2,
+				3,
+				4,
+				5,
+				6,
+				7
+			],
+			"peso": 5,
+			"ban": 0
+		},
+		{
+			"nome": "Empanadas",
+			"giorni": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7
+			],
+			"peso": 5,
+			"ban": 0
+		},
+		{
+			"nome": "Portafoglio",
+			"giorni": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7
+			],
+			"peso": 5,
+			"ban": 0
+		},
+		{
+			"nome": "Enzo",
+			"giorni": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7
+			],
+			"peso": 5,
+			"ban": 0
+		},
+		{
+			"nome": "Mombercelli",
+			"giorni": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7
+			],
+			"peso": 5,
+			"ban": 0
+		},
+		{
+			"nome": "Vegano",
+			"giorni": [
+				7
+			],
+			"peso": 5,
+			"ban": 0
+		},
+		{
+			"nome": "Panuozzo",
+			"giorni": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7
+			],
+			"peso": 1,
+			"ban": 0
+		},
+		{
+			"nome": "Signora",
+			"giorni": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7
+			],
+			"peso": 5,
+			"ban": 0
+		},
+		{
+			"nome": "Lauro (011-336922)",
+			"giorni": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7
+			],
+			"peso": 1,
+			"ban": 0
+		},
+		{
+			"nome": "Civassa (011-3821328)",
+			"giorni": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7
+			],
+			"peso": 1,
+			"ban": 0
+		}
+	]
+}
