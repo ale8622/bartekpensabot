@@ -17,6 +17,4 @@ module.exports.Constants = {
     mangiatoRedisKey : "doveMangiare_",
     Tektek: ["./images/MimmoTek.jpg", "./images/SashaTek.jpg", "./images/MerdaTek.jpg", "./images/FagigioTek.jpg", "./images/IoTek.jpg"],
     Giorni: ["[animale]DIO","dai che è LuneDio!", "dai che è MarteDio!", "dai che è MercoleDio!", "dai che è GioveDio!","dai che è VenerDio!", "CazzoFai? è sabato!", "COSA???"]
-
-
 }

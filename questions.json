@@ -1,36 +1,57 @@
 {
-    "domandone":[
-    "Opzionabile?"
-    ,"FootballDataPlatform o BundesligaDataPlatform?"
-    ,"Jay ma che fay?"
-    ,",Jay ma ci sei?"
-    ,"Jay dove sei? (non 'in che timea zone sei?')"
-    ,"Materializer DS, WTF?"
-    ,"Ma perchè 4 topic?"
-    ,"Ma SDP è adatta o non è adatta a fare le Olimpiadi?"
-    ,"Ready to Production?"
-    ,"Tutto ok? ditelo addesso o mai più!"
-    ,"Ti puoi scrivere il task?"
-    ,"Saas o Paas?"
-    ,"Q3 o Q4? magari Q5?" 
-    ,"SDP o Salerno Reggio Calabria?"
-    ,"POC o Project Mode?"
-    ,"Strapi o Competition Hub?"
-    ,"Kaa o Confluent?"
-    ,"Classe Generica o Classe Specifiga?"
-    ,"Perchè le lineup nell'administration panel?"
-    ,"Ma i widget funzionano?"
-    ,"Anche su staging?"
-    ,"Bundesliga o bundesliga2?"
-    ,"Bundesliga or BurgersLiga?"
-    ,"Michael è in ferie?"
-    ,"Schedule by Day o Schedule by Date?"
-    ,"Dev o DevOps?"
-    ,"Ma in bagno si può togliere la mascherina?"
-    ,"Perché Excel per mettere gli screenshot?"
-    ,"ma lo stipendio?"],
-    "pranzo":[],
-    "pranzoSerio":[{"nome":"Baretto","giorni":[1,2,3,4,5,6,7],"peso":5,"ban":0},{"nome":"Roselli","giorni":[2,3,4,5,6,7],"peso":5,"ban":0},{"nome":"Empanadas","giorni":[1,2,3,4,5,6,7],"peso":5,"ban":0},{"nome":"Portafoglio","giorni":[1,2,3,4,5,6,7],"peso":5,"ban":0},{"nome":"Enzo","giorni":[1,2,3,4,5,6,7],"peso":5,"ban":0},{"nome":"Mobercelli","giorni":[1,2,3,4,5,6,7],"peso":5,"ban":0},{"nome":"Vegano","giorni":[1,2,3,4,5,6,7],"peso":5,"ban":0},{"nome":"Panuozzo","giorni":[1,2,3,4,5,6,7],"peso":5,"ban":0},{"nome":"Signora","giorni":[1,2,3,4,5,6,7],"peso":5,"ban":0},{"nome":"Lauro (011-336922)","giorni":[1,2,3,4,5,6,7],"peso":1,"ban":0},{"nome":"Civassa (011-3821328)","giorni":[1,2,3,4,5,6,7],"peso":1,"ban":0}], 
-    "ics":["Osakax","Peruglio","Agostu","CaXaPonte","Maccaronix","Tettembre","Remox","ControCorrente","Personigga","Romaxoli (piadina)","CiaoCiaoCiaoLudi","Laurox","GigiX","Gigixxxxxxx","SDP","delta","bartekbot","Daily","msc","LucaLegoraCheTornaDaMsc","Materializer con Mongo","La Solution not scalable","PapàCheHaDimenticatoLaFiglia","ahhhh Jira","XWorkspace Zucchetti","MSC","'IcsRemove' che fa schifo!!","ClaudiuX","CSSDay","SDXP Widgets","Orribilant","Adapter","InsalataX","FalcoX","SambucaX","Covid19","XStronzo","CapellaX","HpIcs","ParlareInCorxivo"],
-    "RDiceCose":[]
+    "domandone" : [
+        "SDP o FDP?",
+        "Opzionabile?",
+        "FootballDataPlatform o BundesligaDataPlatform?",
+        "Jay ma che fay?",
+	    "Jay ma ci sei?",
+        "Jay dove sei? (non 'in che time zone sei?')",
+        "Materializer DS, WTF?",   
+        "Ma perchè 4 topic?",
+        "Ma SDP è adatta o non è adatta a fare le Olimpiadi?",
+        "Ready to Production?",
+        "Tutto ok? ditelo addesso o mai più!",
+        "Ti puoi scrivere il task?",
+        "Saas o Paas?",
+        "Q3 o Q4? magari Q5? ",
+        "SDP o Salerno Reggio Calabria?",
+        "POC o Project Mode?",
+        "Strapi o Competition Hub?",
+        "Kaa o Confluent?",
+        "Classe Generica o Classe Specifiga?",
+        "Perchè le lineup nell'administration panel?",
+        "Ma i widget funzionano?",
+        "Anche su staging?",
+        "Bundesliga o bundesliga2?",
+        "Bundesliga or BurgersLiga?",
+        "Michael è in ferie?"
+    ],
+    "pranzo": [
+        "Baretto",
+        "Roselli",
+        "Empanadas",
+        "Portafoglio",
+        "Enzo",
+        "Mobercelli",
+        "Vegano",
+        "Panuozzo",
+        "Kebab",
+        "Mombercelli"
+    ],
+    "ics": [
+        "Osakax",
+        "Peruglio",
+        "Agostu",
+        "CaXaPonte",
+        "Maccaronix",
+        "Tettembre",
+        "Remox",
+        "ControCorrente",
+        "Personigga",
+        "Romaxoli (padina)"
+    ],
+    "RDiceCose":[
+        "Ma se togliamo Zookeeper, quanta RAM liberiamo?",
+        "Poi da aprile vediamo di lavorare un po' in Project mode"
+    ]
 }
