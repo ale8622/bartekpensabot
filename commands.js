@@ -1,0 +1,48 @@
+module.exports.Commands = process.env.COMMAND_VERSION =="FAKE" ? 
+
+{
+    Start : /NosStart/,
+    Init : /no init/,
+    Version :/no Version/,
+    Help : /no Help/,
+    AddIcs : /no IcsAdd /,
+    RemoveIcs : /no IcsRemove /,
+    AllMangiamo : /NOT-MangiareAll/,
+    AddMangiamo : /NOT-MangiareAdd /,
+    RemoveMangiamo : /NOT-MangiareRemove /,
+    AllBartek : /no BartekAll/,
+    AddBartek : /no BartekAdd /,
+    RemoveBartek: /no BarteKRemove /,
+    Ics : /no ics/,
+    IcsAll : /NOIcsAll/,
+    Bartek : /no Domandati/,
+    Mangiamo : /no Mangiamo/,
+    RDiceCose: /no RDicecose/,
+    AllRDiceCose: /no RDiceAll/,
+    AddRDiceCose: /no RDiceAdd /,
+    RemoveRDiceCose: /no RDiceRemove /,
+    Dio: /DiOpork/
+   } :
+   {
+    Start : /Start/,
+    Init : /init/,
+    Version :/Version/,
+    Help : /Help/,
+    AddIcs : /IcsAdd /,
+    RemoveIcs : /IcsRemove /,
+    AllMangiamo : /NOT-MangiareAll/,
+    AddMangiamo : /NOT-MangiareAdd /,
+    RemoveMangiamo : /NOT-MangiareRemove /,
+    AllBartek : /BartekAll/,
+    AddBartek : /BartekAdd /,
+    RemoveBartek: /BarteKRemove /,
+    Ics : /ics/,
+    IcsAll : /IcsAll/,
+    Bartek : /Domandati/,
+    Mangiamo : /Mangiamo/,
+    RDiceCose: /RDicecose/,
+    AllRDiceCose: /RDiceAll/,
+    AddRDiceCose: /RDiceAdd /,
+    RemoveRDiceCose: /RDiceRemove /,
+    Dio: /Dio/
+   };

@@ -1,0 +1,20 @@
+{
+	"dios": [
+		{
+			"Nome": "gabbiano",
+			"Caption": "Guardalo! Qunat'ègross!",
+			"Giorni": [1,2,3,4,5,6,7],
+			"Extesnsion" : "mp3",
+			"FileName" : "dioImages/Bitritto.mp3",
+			"Ash" : ""
+		},
+		{
+			"Nome": "Storia Infinita",
+			"Caption": "Vai Teriaki!",
+			"Giorni": [5],
+			"Extesnsion" : "mp4",
+			"FileName" : "dioImages/storiainfinita.mp4",
+			"Ash" : ""
+		}
+	]
+}
