@@ -20,7 +20,8 @@ var global_apranzo = null;
 async function readQuestions(msg) {
     try{
         console.log("readQuestions");
-        return await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);
+        return await redisClient.getJson(msg.chat.id,"questions");
+        //return await redisClient.getJsonQuestions(msg.chat.id, Constants.questionsRedisKey);
     } 
     catch (ex){
         console.log("Non riesco a leggere da redis");
